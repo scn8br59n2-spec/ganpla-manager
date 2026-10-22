@@ -3,32 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>蔵書・書庫管理アプリ BookManager</title>
+    <title>プライベート ガンプラガチャ Simulator PRO v4.1.0</title>
+
+    <!-- APPLE TOUCH ICON -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23060913'/><rect x='30' y='30' width='452' height='452' rx='80' fill='none' stroke='%230284c7' stroke-width='10' opacity='0.5'/><path d='M256 90 L390 165 L390 315 L256 390 L122 315 L122 165 Z' fill='%230f172a' stroke='%2338bdf8' stroke-width='12'/><path d='M256 90 L390 165 L256 240 L122 165 Z' fill='%230284c7' opacity='0.7'/><path d='M256 240 L390 165 L390 315 L256 390 Z' fill='%230369a1' opacity='0.9'/><path d='M256 240 L122 165 L122 315 L256 390 Z' fill='%230c4a6e' opacity='0.9'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23060913'/><path d='M256 90 L390 165 L390 315 L256 390 L122 315 L122 165 Z' fill='%230f172a' stroke='%2338bdf8' stroke-width='12'/></svg>">
+
+    <!-- CSS Hide System Alerts -->
+    <style id="hide-system-alerts">
+        .system-warning-banner,
+        .unpublished-warning,
+        [class*="unpublished"],
+        [id*="unpublished"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+    </style>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap');
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #0f172a;
-            color: #f1f5f9;
+            background-color: #060913;
+            color: #e2e8f0;
+            overflow-x: hidden;
         }
 
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+
         .scifi-panel {
-            background: rgba(30, 41, 59, 0.85);
-            border: 1px solid rgba(51, 65, 85, 0.8);
-            backdrop-filter: blur(12px);
+            background: linear-gradient(135deg, rgba(13, 20, 36, 0.95) 0%, rgba(20, 30, 55, 0.85) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1), inset 0 0 15px rgba(56, 189, 248, 0.05);
+            backdrop-filter: blur(10px);
         }
 
         /* --- Camera Scanner Styles --- */
         .camera {
             position: relative;
-            background: #020617;
+            background: #0b1813;
             aspect-ratio: 4/3;
             overflow: hidden;
             isolation: isolate;
@@ -44,7 +67,7 @@
             object-fit: cover;
             z-index: 1;
             display: block;
-            background: #020617;
+            background: #0b1813;
             pointer-events: none;
             touch-action: none;
             -webkit-user-select: none;
@@ -55,13 +78,13 @@
             position: absolute;
             inset: 0;
             z-index: 2;
-            background: radial-gradient(circle, #1e293b, #020617);
+            background: radial-gradient(circle, #1e293b, #0b1813);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             gap: 12px;
-            color: #94a3b8;
+            color: #d0e8d9;
             font-size: 13px;
             pointer-events: none;
         }
@@ -82,10 +105,10 @@
             height: clamp(100px, 31vw, 147px);
             width: 88%;
             max-width: 460px;
-            border: 3px solid #38bdf8;
+            border: 3px solid #42e991;
             border-radius: 15px;
-            background: rgba(56, 189, 248, 0.03);
-            box-shadow: 0 0 0 999px rgba(0, 0, 0, .5), inset 0 0 16px rgba(56, 189, 248, 0.2);
+            background: rgba(27, 206, 107, .025);
+            box-shadow: 0 0 0 999px rgba(0, 0, 0, .4), inset 0 0 16px #33ee8730, 0 0 16px #13d46b55;
             position: relative;
         }
 
@@ -95,13 +118,13 @@
             left: 8%;
             right: 8%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #38bdf8, transparent);
-            box-shadow: 0 0 9px #38bdf8;
+            background: linear-gradient(90deg, transparent, #70ffb5, transparent);
+            box-shadow: 0 0 9px #8affca;
             top: 49%;
         }
 
         .camera.scanning .frame::before {
-            animation: sweep 2.0s ease-in-out infinite alternate;
+            animation: sweep 2.3s ease-in-out infinite alternate;
         }
 
         @keyframes sweep {
@@ -111,12 +134,12 @@
 
         .guide-label {
             margin-top: 15px;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #091d15d9;
+            border: 1px solid #ffffff33;
             border-radius: 99px;
             color: #fff;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 750;
             padding: 8px 12px;
             text-align: center;
         }
@@ -126,18 +149,19 @@
             z-index: 6;
             left: 12px;
             top: 12px;
-            border-radius: 9px;
-            background: rgba(15, 23, 42, 0.85);
-            color: #38bdf8;
+            border-radius: 99px;
+            background: #08271dc9;
+            color: #e4fbee;
             padding: 6px 10px;
             font-size: 11px;
             font-weight: 800;
+            letter-spacing: .06em;
         }
 
         .state-live::before {
             content: "";
             display: inline-block;
-            background: #38bdf8;
+            background: #47ff9b;
             width: 7px;
             height: 7px;
             border-radius: 50%;
@@ -150,177 +174,308 @@
             left: 13px;
             right: 13px;
             bottom: 12px;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid #38bdf8;
+            background: rgba(8, 38, 26, .96);
+            border: 1px solid #64eeac;
             border-radius: 13px;
             color: #fff;
             padding: 10px 13px;
+            box-shadow: 0 7px 20px #0006;
         }
 
-        .camera.success .frame { border-color: #4ade80; }
+        .camera.success .frame { border-color: #c9ffe1; }
         .camera.success .frame::before { display: none; }
+
+        .cat-badge-large { background: rgba(244, 63, 94, 0.2); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.5); }
+        .cat-badge-clear { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.5); }
+        .cat-badge-cca { background: rgba(234, 179, 8, 0.2); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.5); }
+        .cat-badge-pbandai { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.5); }
+        .cat-badge-gbase { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.5); }
+        .cat-badge-rare { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.5); }
+        .cat-badge-lastone { background: rgba(239, 68, 68, 0.25); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.6); }
+        .cat-badge-normal { background: rgba(100, 116, 139, 0.2); color: #cbd5e1; border: 1px solid rgba(100, 116, 139, 0.5); }
+
+        .status-badge-unbuilt { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.4); }
+        .status-badge-assembly { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
+        .status-badge-finished { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+        /* Paint Status Badges */
+        .paint-status-full { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.5); }
+        .paint-status-little { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.5); }
+        .paint-status-empty { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); }
+
+        @keyframes rainbowGlow {
+            0% { box-shadow: 0 0 25px #ef4444, inset 0 0 15px #ef4444; border-color: #ef4444; }
+            33% { box-shadow: 0 0 25px #22c55e, inset 0 0 15px #22c55e; border-color: #22c55e; }
+            66% { box-shadow: 0 0 25px #38bdf8, inset 0 0 15px #38bdf8; border-color: #38bdf8; }
+            100% { box-shadow: 0 0 25px #ef4444, inset 0 0 15px #ef4444; border-color: #ef4444; }
+        }
+        .glow-red { box-shadow: 0 0 30px #ef4444, inset 0 0 15px #ef4444; border-color: #ef4444; }
+        .glow-green { box-shadow: 0 0 30px #22c55e, inset 0 0 15px #22c55e; border-color: #22c55e; }
+        .glow-rainbow { animation: rainbowGlow 1.2s linear infinite; }
 
         .modal-overlay {
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #060913; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative selection:bg-sky-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-cyan-500 selection:text-white">
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-30">
+    <div id="flash-screen" class="fixed inset-0 bg-white opacity-0 pointer-events-none z-50 transition-opacity duration-200"></div>
+
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-30">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 shrink-0">
-                    <i class="fa-solid fa-book-bookmark text-xl"></i>
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-600 via-sky-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30 shrink-0">
+                    <i class="fa-solid fa-cube text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg sm:text-xl text-white tracking-wide">
-                        蔵書管理アプリ <span class="text-xs text-sky-400 font-mono">v2.5</span>
+                    <h1 class="font-orbitron font-extrabold text-base sm:text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-blue-500">
+                        GUNPLA GACHA PRO
                     </h1>
-                    <p class="text-[10px] text-slate-400">書庫データ＆お店での重複購入防止</p>
+                    <p class="text-[9px] sm:text-[10px] text-slate-400 tracking-widest uppercase font-orbitron">SEASON EXTRACTION SYSTEM</p>
                 </div>
             </div>
 
-            <!-- MODE SWITCHER -->
-            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
-                <button id="mode-home-btn" onclick="switchMode('home')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-sky-600 text-white shadow-md">
-                    <i class="fa-solid fa-house"></i> <span>家で登録</span>
+            <div class="flex items-center gap-2">
+                <button onclick="openScannerModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg flex items-center gap-1.5 text-xs font-orbitron transition">
+                    <i class="fa-solid fa-barcode"></i> <span class="hidden sm:inline">スキャン</span>
                 </button>
-                <button id="mode-shop-btn" onclick="switchMode('shop')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-400 hover:text-white transition flex items-center gap-2">
-                    <i class="fa-solid fa-store text-amber-400"></i> <span>店で確認</span>
-                </button>
+                <nav class="flex bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs sm:text-sm">
+                    <button id="nav-gacha" onclick="switchTab('gacha')" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold transition flex items-center gap-2 bg-cyan-600 text-white shadow-md">
+                        <i class="fa-solid fa-dice-d20"></i> <span class="hidden sm:inline">ガチャ</span>
+                    </button>
+                    <button id="nav-stock" onclick="switchTab('stock')" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked"></i> <span class="hidden sm:inline">積みプラ管理</span>
+                    </button>
+                    <button id="nav-paint" onclick="switchTab('paint')" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition flex items-center gap-2">
+                        <i class="fa-solid fa-fill-drip text-amber-400"></i> <span class="hidden sm:inline">塗料管理</span>
+                    </button>
+                    <button id="nav-history" onclick="switchTab('history')" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i> <span class="hidden sm:inline">履歴</span>
+                    </button>
+                    <button onclick="openConfigModal()" class="px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> <span class="hidden sm:inline">設定</span>
+                    </button>
+                </nav>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
 
-        <!-- 1. STATS BANNER -->
-        <section class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <div class="scifi-panel p-3.5 rounded-xl flex items-center gap-3 border-l-4 border-l-sky-500">
-                <div class="p-2.5 bg-sky-950/80 text-sky-400 rounded-lg text-lg">
-                    <i class="fa-solid fa-book"></i>
-                </div>
-                <div>
-                    <div class="text-[11px] text-slate-400 font-bold">総蔵書数</div>
-                    <div id="stat-total" class="text-lg font-black text-white font-mono">0 冊</div>
+        <!-- TAB 1: GACHA MAIN -->
+        <section id="tab-gacha" class="space-y-6">
+            <div class="scifi-panel rounded-2xl p-6 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-black text-white tracking-wide font-orbitron">
+                            PROJECT V: SEASON SYSTEM
+                        </h2>
+                        <p class="text-slate-400 text-sm mt-1">
+                            今シーズン有効なプールから抽出を行います。設定された終了上限数に達するとラストワン賞が開放されます。
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-1.5 max-w-md">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold border border-cyan-500/40 text-cyan-300 bg-cyan-950/60 font-orbitron"><i class="fa-solid fa-cube"></i> Grade: RG, HG, HGUC...</span>
+                        <span class="px-2 py-1 rounded text-[10px] font-bold cat-badge-large"><i class="fa-solid fa-shield-halved"></i> 大型</span>
+                        <span class="px-2 py-1 rounded text-[10px] font-bold cat-badge-clear"><i class="fa-solid fa-sparkles"></i> クリア</span>
+                        <span class="px-2 py-1 rounded text-[10px] font-bold cat-badge-cca"><i class="fa-solid fa-jet-fighter"></i> 逆襲のシャア</span>
+                        <span class="px-2 py-1 rounded text-[10px] font-bold cat-badge-pbandai"><i class="fa-solid fa-box"></i> プレバン</span>
+                        <span class="px-2 py-1 rounded text-[10px] font-bold cat-badge-lastone"><i class="fa-solid fa-skull"></i> ラストワン</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="scifi-panel p-3.5 rounded-xl flex items-center gap-3 border-l-4 border-l-indigo-500">
-                <div class="p-2.5 bg-indigo-950/80 text-indigo-400 rounded-lg text-lg">
-                    <i class="fa-solid fa-book-open"></i>
+            <!-- GACHA POD STAGE -->
+            <div class="scifi-panel rounded-2xl p-8 text-center relative min-h-[380px] flex flex-col items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
+
+                <div id="gacha-machine" class="relative z-10">
+                    <div id="capsule-container" class="relative w-40 h-40 mx-auto mb-6 flex items-center justify-center cursor-pointer group" onclick="handleGachaAction()">
+                        <div class="absolute inset-0 rounded-full border-2 border-dashed border-cyan-500/30 group-hover:border-cyan-400 animate-spin" style="animation-duration: 12s;"></div>
+                        <div class="absolute -inset-2 rounded-full bg-cyan-500/10 blur-xl opacity-50 group-hover:opacity-100 transition duration-500"></div>
+                        
+                        <div id="capsule-sphere" class="w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 border-2 border-cyan-400/50 shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105">
+                            <div class="absolute inset-x-0 top-0 h-1/2 bg-white/10 rounded-t-full border-b border-white/20"></div>
+                            <i id="capsule-icon" class="fa-solid fa-cube text-4xl text-cyan-400 transition-transform duration-300 group-hover:rotate-12"></i>
+                        </div>
+                    </div>
+
+                    <p id="machine-status-text" class="text-xs font-orbitron text-cyan-400/80 tracking-widest mb-1">SYSTEM STANDBY</p>
+                    <h3 id="machine-sub-text" class="text-lg font-bold text-slate-200 mb-6">シーズンを開始して抽出システムを起動</h3>
                 </div>
-                <div>
-                    <div class="text-[11px] text-slate-400 font-bold">漫画</div>
-                    <div id="stat-manga" class="text-lg font-black text-indigo-200 font-mono">0 冊</div>
+
+                <!-- GACHA BUTTONS -->
+                <div class="relative z-10 flex flex-wrap justify-center gap-4 w-full max-w-md">
+                    <button id="main-gacha-btn" onclick="handleGachaAction()" class="w-full py-4 px-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-900/40 border border-emerald-300/40 transition transform active:scale-95 flex items-center justify-center gap-3 text-lg font-orbitron">
+                        <i class="fa-solid fa-power-off text-2xl text-emerald-200"></i>
+                        <span id="main-btn-label">シーズンを開始する</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="scifi-panel p-3.5 rounded-xl flex items-center gap-3 border-l-4 border-l-purple-500">
-                <div class="p-2.5 bg-purple-950/80 text-purple-400 rounded-lg text-lg">
-                    <i class="fa-solid fa-bookmark"></i>
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="scifi-panel p-4 rounded-xl flex items-center gap-3">
+                    <div class="p-3 bg-cyan-950 text-cyan-400 rounded-lg text-lg border border-cyan-800">
+                        <i class="fa-solid fa-cubes"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400">今季有効プール数</div>
+                        <div id="stat-total-count" class="text-lg font-bold font-orbitron text-white">0 個</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="text-[11px] text-slate-400 font-bold">ラノベ</div>
-                    <div id="stat-ranobe" class="text-lg font-black text-purple-200 font-mono">0 冊</div>
+
+                <div class="scifi-panel p-4 rounded-xl flex items-center gap-3">
+                    <div class="p-3 bg-cyan-950 text-sky-400 rounded-lg text-lg border border-cyan-800">
+                        <i class="fa-solid fa-crosshairs"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400">今季抽出目標 / 進捗</div>
+                        <div id="stat-season-progress" class="text-lg font-bold font-orbitron text-sky-300">0 / 0</div>
+                    </div>
+                </div>
+
+                <div class="scifi-panel p-4 rounded-xl flex items-center gap-3">
+                    <div class="p-3 bg-cyan-950 text-amber-400 rounded-lg text-lg border border-cyan-800">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400">累計ガチャ回数</div>
+                        <div id="stat-total-pulls" class="text-lg font-bold font-orbitron text-amber-300">0 回</div>
+                    </div>
+                </div>
+
+                <div class="scifi-panel p-4 rounded-xl flex items-center gap-3">
+                    <div class="p-3 bg-cyan-950 text-rose-400 rounded-lg text-lg border border-cyan-800">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400">大型枠キット</div>
+                        <div id="stat-large-count" class="text-lg font-bold font-orbitron text-rose-400">0 個</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="scifi-panel p-3.5 rounded-xl flex items-center gap-3 border-l-4 border-l-emerald-500">
-                <div class="p-2.5 bg-emerald-950/80 text-emerald-400 rounded-lg text-lg">
-                    <i class="fa-solid fa-feather"></i>
+            <!-- LAST ONE SPECIAL DISPLAY -->
+            <div class="scifi-panel rounded-2xl p-4 border border-rose-500/40 bg-gradient-to-r from-rose-950/40 via-slate-900/60 to-slate-900/60">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold text-rose-400 font-orbitron tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-skull"></i> 🔥 LAST ONE PRIZE TARGET (ラストワン特別枠)
+                    </h3>
+                    <span class="text-[10px] text-slate-400">シーズン達成時に確定獲得</span>
                 </div>
-                <div>
-                    <div class="text-[11px] text-slate-400 font-bold">小説</div>
-                    <div id="stat-novel" class="text-lg font-black text-emerald-200 font-mono">0 冊</div>
+                <div id="lastone-special-container" class="flex flex-wrap gap-2">
+                    <!-- Dynamic Last One Target Inject -->
                 </div>
             </div>
 
-            <div class="scifi-panel p-3.5 rounded-xl flex items-center gap-3 border-l-4 border-l-slate-500 col-span-2 sm:col-span-1">
-                <div class="p-2.5 bg-slate-900 text-slate-400 rounded-lg text-lg">
-                    <i class="fa-solid fa-layer-group"></i>
+            <!-- GACHA POOL LINEUP LIST -->
+            <div class="scifi-panel rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-cyan-400"></i> 今シーズン有効ラインナップ
+                    </h3>
+                    <span id="lineup-count-badge" class="text-xs font-orbitron font-bold text-cyan-300 bg-cyan-950 border border-cyan-800 px-3 py-1 rounded-full">
+                        0 KITS
+                    </span>
                 </div>
-                <div>
-                    <div class="text-[11px] text-slate-400 font-bold">その他</div>
-                    <div id="stat-other" class="text-lg font-black text-slate-300 font-mono">0 冊</div>
+                <div id="gacha-lineup-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
+                    <!-- JS Lineup Dynamic Inject -->
                 </div>
             </div>
         </section>
 
-        <!-- 2. HOME MODE SECTION -->
-        <section id="section-home" class="space-y-4">
-            <!-- CONTROLS & SEARCH BAR -->
-            <div class="scifi-panel p-4 rounded-2xl space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-3 border-b border-slate-800">
+        <!-- TAB 2: INVENTORY -->
+        <section id="tab-stock" class="space-y-6 hidden">
+            <div class="scifi-panel rounded-2xl p-6">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
                     <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-boxes-stacked text-sky-400"></i> 書庫一覧
-                        </h2>
-                        <p class="text-xs text-slate-400">登録済みの本を検索・管理できます。</p>
+                        <h2 class="text-2xl font-black text-white">ガンプラ・積みプラ管理</h2>
+                        <p class="text-slate-400 text-sm mt-1">状態（未組立/仮組/完成）および今シーズンの有効枠を設定できます。</p>
                     </div>
-
-                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                        <button onclick="openScannerModal('home')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-barcode"></i> バーコードでスキャン登録
+                    
+                    <div class="flex flex-wrap gap-2 items-center w-full lg:w-auto">
+                        <button onclick="openScannerModal()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-barcode"></i> バーコードスキャン
                         </button>
-                        <button onclick="openAddModal()" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-plus"></i> 手動追加
+                        <button onclick="openAddModal()" class="px-3 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> 追加
                         </button>
-                        <button onclick="openBackupModal('export')" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 transition">
-                            <i class="fa-solid fa-download"></i> 保存・バックアップ
+                        <button onclick="openBackupModal('export')" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-share-nodes"></i> データ保存・共有
                         </button>
-                        <button onclick="openBackupModal('import')" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 transition">
-                            <i class="fa-solid fa-upload"></i> 復元
+                        <button onclick="openBackupModal('import')" class="px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-import"></i> 復元・一括読込
                         </button>
                     </div>
                 </div>
 
-                <!-- FILTER BAR -->
-                <div class="flex flex-col md:flex-row gap-3 items-center justify-between">
-                    <div class="relative w-full md:w-72">
+                <!-- SEARCH & SORT CONTROLS -->
+                <div class="flex flex-col md:flex-row gap-3 mb-4 justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                    <div class="relative w-full md:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
-                        <input type="text" id="search-input" oninput="renderBookList()" placeholder="タイトル・出版社・ISBN検索..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-sky-500">
+                        <input type="text" id="stock-search-input" oninput="renderStock()" placeholder="キット名・JAN・日付で検索..." class="w-full bg-slate-950 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
                     </div>
 
-                    <div class="flex flex-wrap gap-2 items-center w-full md:w-auto justify-between md:justify-end">
-                        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs overflow-x-auto">
-                            <button onclick="setGenreFilter('ALL')" class="genre-filter-btn px-3 py-1 rounded-lg font-bold bg-sky-600 text-white" data-genre="ALL">すべて</button>
-                            <button onclick="setGenreFilter('漫画')" class="genre-filter-btn px-3 py-1 rounded-lg font-bold text-slate-400 hover:text-white" data-genre="漫画">漫画</button>
-                            <button onclick="setGenreFilter('ラノベ')" class="genre-filter-btn px-3 py-1 rounded-lg font-bold text-slate-400 hover:text-white" data-genre="ラノベ">ラノベ</button>
-                            <button onclick="setGenreFilter('小説')" class="genre-filter-btn px-3 py-1 rounded-lg font-bold text-slate-400 hover:text-white" data-genre="小説">小説</button>
-                            <button onclick="setGenreFilter('その他')" class="genre-filter-btn px-3 py-1 rounded-lg font-bold text-slate-400 hover:text-white" data-genre="その他">その他</button>
-                        </div>
+                    <div class="flex border-b border-slate-800 md:border-b-0 gap-1.5 overflow-x-auto w-full md:w-auto py-1">
+                        <button onclick="filterStock('ALL')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-600 text-white whitespace-nowrap" data-filter="ALL">すべて</button>
+                        <button onclick="filterStock('RG')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-cyan-300 hover:bg-slate-700 whitespace-nowrap" data-filter="RG">RG</button>
+                        <button onclick="filterStock('HG')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-sky-300 hover:bg-slate-700 whitespace-nowrap" data-filter="HG">HG</button>
+                        <button onclick="filterStock('HGUC')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-blue-300 hover:bg-slate-700 whitespace-nowrap" data-filter="HGUC">HGUC</button>
+                        <button onclick="filterStock('HGCE')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-indigo-300 hover:bg-slate-700 whitespace-nowrap" data-filter="HGCE">HGCE</button>
+                        <button onclick="filterStock('HGAC')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-teal-300 hover:bg-slate-700 whitespace-nowrap" data-filter="HGAC">HGAC</button>
+                        <button onclick="filterStock('HGAW')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-emerald-300 hover:bg-slate-700 whitespace-nowrap" data-filter="HGAW">HGAW</button>
+                        <button onclick="filterStock('FRs')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-fuchsia-300 hover:bg-slate-700 whitespace-nowrap" data-filter="FRs">FRs</button>
+                        <button onclick="filterStock('MGSD')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-amber-300 hover:bg-slate-700 whitespace-nowrap" data-filter="MGSD">MGSD</button>
+                        <button onclick="filterStock('LARGE')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-rose-400 hover:bg-slate-700 whitespace-nowrap" data-filter="LARGE">大型</button>
+                        <button onclick="filterStock('CLEAR')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-sky-400 hover:bg-slate-700 whitespace-nowrap" data-filter="CLEAR">クリア</button>
+                        <button onclick="filterStock('CCA')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-yellow-400 hover:bg-slate-700 whitespace-nowrap" data-filter="CCA">逆シャア</button>
+                        <button onclick="filterStock('PBANDAI')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-purple-400 hover:bg-slate-700 whitespace-nowrap" data-filter="PBANDAI">プレバン</button>
+                        <button onclick="filterStock('GBASE')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-emerald-400 hover:bg-slate-700 whitespace-nowrap" data-filter="GBASE">ガンベ</button>
+                        <button onclick="filterStock('RARE')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-orange-400 hover:bg-slate-700 whitespace-nowrap" data-filter="RARE">レア</button>
+                        <button onclick="filterStock('LASTONE')" class="stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-red-400 hover:bg-slate-700 whitespace-nowrap" data-filter="LASTONE">ラストワン</button>
+                    </div>
 
-                        <button id="fav-toggle-btn" onclick="toggleFavFilter()" class="px-3 py-1.5 bg-slate-950 border border-amber-500/40 text-amber-400 hover:bg-amber-950/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0">
-                            <i id="fav-toggle-icon" class="fa-regular fa-star"></i>
-                            <span>★ お気に入りのみ</span>
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <span class="text-xs text-slate-400 shrink-0"><i class="fa-solid fa-arrow-down-a-z"></i> 並び替え:</span>
+                        <select id="stock-sort-key" onchange="renderStock()" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-cyan-500">
+                            <option value="grade">グレード</option>
+                            <option value="date">登録日</option>
+                            <option value="name">キット名</option>
+                            <option value="rarity">レアリティ</option>
+                            <option value="category">属性 / 枠組み</option>
+                            <option value="status">組立状態</option>
+                        </select>
+                        <button id="stock-sort-order-btn" onclick="toggleSortOrder()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold rounded-lg border border-slate-700 shrink-0" title="昇順/降順切り替え">
+                            <i id="sort-order-icon" class="fa-solid fa-arrow-down-short-wide"></i> <span id="sort-order-label">昇順</span>
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- BOOK TABLE / LIST -->
-            <div class="scifi-panel rounded-2xl overflow-hidden">
+                <!-- Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="bg-slate-950/80 text-xs font-bold text-slate-400 uppercase border-b border-slate-800">
+                        <thead class="bg-slate-950 text-xs font-orbitron uppercase text-slate-400 border-b border-slate-800">
                             <tr>
-                                <th class="p-3 text-center w-10">★</th>
-                                <th class="p-3">ジャンル1</th>
-                                <th class="p-3">タイトル / 巻数</th>
-                                <th class="p-3">ジャンル2 (出版社)</th>
-                                <th class="p-3">ISBN (JAN)</th>
+                                <th class="p-3">グレード</th>
+                                <th class="p-3 min-w-[180px]">キット名</th>
+                                <th class="p-3">登録日</th>
+                                <th class="p-3">今季ステータス</th>
+                                <th class="p-3">組立状態</th>
+                                <th class="p-3">属性 / 枠組み</th>
+                                <th class="p-3">レアリティ</th>
+                                <th class="p-3">JANコード</th>
                                 <th class="p-3 text-right">操作</th>
                             </tr>
                         </thead>
-                        <tbody id="book-table-body" class="divide-y divide-slate-800/60">
+                        <tbody id="stock-list-body" class="divide-y divide-slate-800/60">
                             <!-- JS Inject -->
                         </tbody>
                     </table>
@@ -328,30 +483,119 @@
             </div>
         </section>
 
-        <!-- 3. SHOP MODE SECTION -->
-        <section id="section-shop" class="space-y-6 hidden">
-            <div class="scifi-panel p-6 rounded-2xl border-2 border-amber-500/30 bg-gradient-to-br from-amber-950/10 via-slate-900 to-slate-900">
-                <div class="text-center max-w-xl mx-auto space-y-4 py-4">
-                    <div class="inline-flex p-3 bg-amber-500/10 text-amber-400 rounded-2xl border border-amber-500/30 text-2xl">
-                        <i class="fa-solid fa-store"></i>
+        <!-- TAB 3: PAINT MANAGEMENT -->
+        <section id="tab-paint" class="space-y-6 hidden">
+            <div class="scifi-panel rounded-2xl p-6">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-white flex items-center gap-2">
+                            <i class="fa-solid fa-fill-drip text-amber-400"></i> 塗料・工具在庫管理
+                        </h2>
+                        <p class="text-slate-400 text-sm mt-1">手持ちの塗料・サーフェイサー等の残量管理（Full / A little / Empty）。実在庫のみ自動表示されます。</p>
                     </div>
-                    <h2 class="text-2xl font-black text-white">お店で持ってるか確認モード</h2>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        店頭で気になる本のバーコードを読み込んでください。<br>
-                        すでに持っているか、抜け巻（例：6巻だけない等）があるかを瞬時に判定します。
-                    </p>
-
-                    <div class="pt-2">
-                        <button onclick="openScannerModal('shop')" class="px-6 py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black rounded-2xl shadow-xl shadow-amber-500/20 text-base transition transform active:scale-95 flex items-center justify-center gap-2 mx-auto w-full sm:w-auto">
-                            <i class="fa-solid fa-barcode text-xl"></i> バーコードを読み取る
+                    
+                    <div class="flex flex-wrap gap-2 items-center w-full lg:w-auto">
+                        <button onclick="openStoreScanModal()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white text-xs font-extrabold rounded-xl shadow-lg transition flex items-center gap-1.5 font-orbitron">
+                            <i class="fa-solid fa-store"></i> 🔍 店頭で在庫チェック
+                        </button>
+                        <button onclick="openPaintScannerModal()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-barcode"></i> スキャン追加
+                        </button>
+                        <button onclick="openAddPaintModal()" class="px-3 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> 手動追加
+                        </button>
+                        <button onclick="openBackupModal('export')" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-share-nodes"></i> データ保存・共有
+                        </button>
+                        <button onclick="openBackupModal('import')" class="px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-xl shadow-lg transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-import"></i> 復元・一括読込
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- SCAN RESULT CARD IN SHOP MODE -->
-            <div id="shop-result-container" class="hidden space-y-4">
-                <!-- JS Dynamic Inject -->
+                <!-- Stats summary bar for paint -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div><div class="text-[11px] text-slate-400">実在庫数 (Full+Little)</div><div id="paint-stat-active" class="text-base font-bold text-emerald-400 font-orbitron">0 個</div></div>
+                        <i class="fa-solid fa-bottle-droplet text-emerald-500 text-xl"></i>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div><div class="text-[11px] text-slate-400">新品 (Full)</div><div id="paint-stat-full" class="text-base font-bold text-cyan-300 font-orbitron">0 個</div></div>
+                        <i class="fa-solid fa-shield-halved text-cyan-400 text-xl"></i>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div><div class="text-[11px] text-slate-400">残量わずか (A little)</div><div id="paint-stat-little" class="text-base font-bold text-amber-300 font-orbitron">0 個</div></div>
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xl"></i>
+                    </div>
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div><div class="text-[11px] text-slate-400">使い切り (Empty)</div><div id="paint-stat-empty" class="text-base font-bold text-rose-400 font-orbitron">0 個</div></div>
+                        <i class="fa-solid fa-trash-can text-rose-400 text-xl"></i>
+                    </div>
+                </div>
+
+                <!-- SEARCH & FILTER CONTROLS FOR PAINT -->
+                <div class="flex flex-col md:flex-row gap-3 mb-4 justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                    <div class="relative w-full md:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                        <input type="text" id="paint-search-input" oninput="renderPaintList()" placeholder="塗料名・型番・メーカー・JANで検索..." class="w-full bg-slate-950 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div class="flex border-b border-slate-800 md:border-b-0 gap-1.5 overflow-x-auto w-full md:w-auto py-1">
+                        <button onclick="filterPaintStatus('ACTIVE')" class="paint-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-600 text-white whitespace-nowrap" data-pfilter="ACTIVE">📦 実在庫のみ</button>
+                        <button onclick="filterPaintStatus('ALL')" class="paint-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap" data-pfilter="ALL">すべて (登録台帳)</button>
+                        <button onclick="filterPaintStatus('EMPTY')" class="paint-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-rose-400 hover:bg-slate-700 whitespace-nowrap" data-pfilter="EMPTY">🗑️ Emptyのみ</button>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <span class="text-xs text-slate-400 shrink-0"><i class="fa-solid fa-arrow-down-a-z"></i> 並び替え:</span>
+                        <select id="paint-sort-key" onchange="renderPaintList()" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-500">
+                            <option value="name">塗料名</option>
+                            <option value="brand">メーカー</option>
+                            <option value="type">塗料タイプ</option>
+                            <option value="status">残量ステータス</option>
+                            <option value="date">登録日</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Paint Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-950 text-xs font-orbitron uppercase text-slate-400 border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">メーカー</th>
+                                <th class="p-3 min-w-[180px]">塗料名 / カラー</th>
+                                <th class="p-3">種類</th>
+                                <th class="p-3 min-w-[120px]">残量ステータス</th>
+                                <th class="p-3">登録日</th>
+                                <th class="p-3">JANコード</th>
+                                <th class="p-3 text-right">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paint-list-body" class="divide-y divide-slate-800/60">
+                            <!-- JS Inject Paint Items -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: HISTORY -->
+        <section id="tab-history" class="space-y-6 hidden">
+            <div class="scifi-panel rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-black text-white">ガチャ排出履歴</h2>
+                        <p class="text-slate-400 text-sm">過去にガチャで獲得したログ。</p>
+                    </div>
+                    <button onclick="clearHistory()" class="px-3 py-1.5 bg-slate-800 hover:bg-rose-900/50 text-slate-400 hover:text-rose-300 text-xs font-bold rounded-lg border border-slate-700 transition">
+                        <i class="fa-solid fa-trash-can"></i> 履歴クリア
+                    </button>
+                </div>
+
+                <div id="history-container" class="space-y-3">
+                    <!-- JS Inject -->
+                </div>
             </div>
         </section>
 
@@ -359,12 +603,12 @@
 
     <!-- SCANNER MODAL -->
     <div id="scanner-modal" class="modal-overlay fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="scifi-panel max-w-lg w-full p-6 rounded-2xl relative border border-sky-500/40" onclick="event.stopPropagation()">
+        <div class="scifi-panel max-w-lg w-full p-6 rounded-2xl relative border border-cyan-500/50" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="scanner-title" class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-barcode text-emerald-400"></i> バーコードスキャン
+                <h3 id="scanner-modal-title" class="text-lg font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-barcode text-emerald-400"></i> ガンプラ バーコードスキャン
                 </h3>
-                <button type="button" onclick="closeScannerModal()" class="text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer">
+                <button type="button" class="close-btn text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer" onclick="closeScannerModal()">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -373,174 +617,520 @@
                 <div id="camera" class="camera">
                     <video id="preview" autoplay muted playsinline webkit-playsinline disablepictureinpicture disableremoteplayback preload="none" aria-label="リアルタイムカメラ映像"></video>
                     <div id="placeholder" class="placeholder">
-                        <div class="text-3xl"><i class="fa-solid fa-camera"></i></div>
+                        <div class="cam-icon text-3xl"><i class="fa-solid fa-camera"></i></div>
                         <span>「カメラを起動」を押してください</span>
                     </div>
                     <div id="overlay" class="overlay">
                         <div class="frame" aria-hidden="true"></div>
-                        <div id="guideLabel" class="guide-label">本のバーコード（ISBN）を合わせてください</div>
+                        <div id="guideLabel" class="guide-label">緑の枠にバーコードを合わせてください</div>
                     </div>
                     <div id="liveTag" class="state-live" hidden>LIVE · カメラ起動中</div>
                     <div id="quickResult" class="quick-result" hidden>
                         <small class="text-emerald-400 font-bold">✓ 読み取り成功</small>
-                        <b id="quickCode" class="text-xl font-mono block"></b>
+                        <b id="quickCode" class="text-xl font-mono"></b>
                     </div>
                 </div>
 
                 <div class="flex gap-2">
-                    <button id="startBtn" type="button" onclick="startCamera()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-lg">カメラを起動</button>
-                    <button id="stopBtn" type="button" onclick="stopCamera()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-lg border border-slate-700" hidden>カメラを停止</button>
+                    <button id="startBtn" type="button" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-lg">カメラを起動</button>
+                    <button id="stopBtn" type="button" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-lg border border-slate-700" hidden>カメラを停止</button>
                 </div>
 
                 <div id="status" class="text-center text-xs text-slate-400 min-h-[30px] flex items-center justify-center px-2">
-                    カメラを起動して本の裏面のバーコードにかざしてください。
+                    カメラを起動すると緑枠内に映像が表示されます。
                 </div>
 
                 <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-                    <button type="button" onclick="closeScannerModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl">
+                    <button type="button" onclick="closeScannerModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg">
                         閉じる
                     </button>
-                    <button type="button" onclick="manualIsbnPrompt()" class="px-4 py-2 bg-slate-800 text-sky-400 text-xs font-bold rounded-xl border border-slate-700">
-                        ISBNを手入力
+                    <button type="button" onclick="manualJanPrompt()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold rounded-lg border border-slate-700">
+                        JAN直接入力
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: ADD / EDIT BOOK -->
+    <!-- MODAL: ADD / EDIT KIT -->
     <div id="add-modal" class="modal-overlay fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="scifi-panel max-w-md w-full p-6 rounded-2xl relative border border-sky-500/40" onclick="event.stopPropagation()">
+        <div class="scifi-panel max-w-md w-full p-6 rounded-2xl relative border border-cyan-500/50" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center mb-3">
-                <h3 id="modal-title" class="text-lg font-bold text-white">本を追加</h3>
-                <button type="button" onclick="closeAddModal()" class="text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer">
+                <h3 id="modal-title" class="text-xl font-black text-white">ガンプラを追加</h3>
+                <button type="button" class="close-btn text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer" onclick="closeAddModal(event)">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="book-form" onsubmit="saveBook(event)" class="space-y-3">
-                <input type="hidden" id="book-id">
-
+            <!-- Auto Match Notification Banner -->
+            <div id="autofill-banner" class="hidden mb-3 p-2.5 bg-emerald-950/80 border border-emerald-500/60 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+                <span><i class="fa-solid fa-circle-check"></i> 登録済みJANコードから自動で補完しました！</span>
+            </div>
+            
+            <form id="kit-form" onsubmit="saveKit(event)" class="space-y-3">
+                <input type="hidden" id="kit-id">
+                
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1">ISBN / JAN (バーコード番号)</label>
-                    <input type="text" id="book-isbn" placeholder="9784......" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-sky-300 font-mono focus:outline-none focus:border-sky-500">
+                    <label class="block text-xs font-bold text-slate-400 mb-1">登録日 (年月日) <span class="text-cyan-400 text-[10px]">*前回の入力日を引き継ぎ</span></label>
+                    <input type="date" id="kit-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-cyan-300 font-orbitron focus:outline-none focus:border-cyan-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1">タイトル <span class="text-rose-400">*</span></label>
-                    <input type="text" id="book-title" required placeholder="例: 葬送のフリーレン 1巻" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
+                    <label class="block text-xs font-bold text-slate-400 mb-1">JANコード / メモ</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="kit-jan" placeholder="4573102......" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-cyan-300 font-mono focus:outline-none focus:border-cyan-500">
+                        <button type="button" onclick="searchBandaiHobby()" class="px-3 py-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white text-xs font-bold rounded-lg shrink-0 flex items-center gap-1">
+                            <i class="fa-solid fa-globe"></i> Web検索
+                        </button>
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1">ジャンル1</label>
-                    <select id="book-genre" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500 font-bold">
-                        <option value="漫画">漫画</option>
-                        <option value="ラノベ">ラノベ</option>
-                        <option value="小説">小説</option>
-                        <option value="その他">その他</option>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">キット名 <span class="text-rose-400">*</span></label>
+                    <input type="text" id="kit-name" required placeholder="例: サザビー" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">グレード</label>
+                    <select id="kit-grade" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-bold">
+                        <option value="RG">RG (Real Grade)</option>
+                        <option value="HG">HG (High Grade)</option>
+                        <option value="HGUC">HGUC (Universal Century)</option>
+                        <option value="HGCE">HGCE (Cosmic Era)</option>
+                        <option value="HGAC">HGAC (After Colony)</option>
+                        <option value="HGAW">HGAW (After War)</option>
+                        <option value="FRs">FRs (Figure-rise Standard)</option>
+                        <option value="MGSD">MGSD (Master Grade SD)</option>
+                        <option value="OTHER">その他 / なし</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1">ジャンル2 (出版社 / レーベル)</label>
-                    <input type="text" id="book-publisher" placeholder="例: 小学館 / サンデーGX" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
+                    <label class="block text-xs font-bold text-slate-400 mb-1">属性 / 特殊枠</label>
+                    <select id="kit-category" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <option value="NORMAL">通常 (標準)</option>
+                        <option value="LARGE">大型 (ゼウスシルエット, 大型MA等)</option>
+                        <option value="CLEAR">クリア (イベント・クリアカラー等)</option>
+                        <option value="CCA">逆シャア (ν, サザビー等)</option>
+                        <option value="PBANDAI">プレバン (プレミアムバンダイ限定)</option>
+                        <option value="GBASE">ガンベ (ガンダムベース限定)</option>
+                        <option value="RARE">レア (限定フィニッシュ / レア物)</option>
+                        <option value="LASTONE">ラストワン (最終特別枠)</option>
+                    </select>
                 </div>
 
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" id="book-favorite" class="w-4 h-4 rounded text-amber-500 focus:ring-amber-500 bg-slate-950 border-slate-700">
-                    <label for="book-favorite" class="text-xs font-bold text-amber-400 cursor-pointer flex items-center gap-1">
-                        <i class="fa-solid fa-star"></i> お気に入り（★）に登録する
-                    </label>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">今季有効ステータス</label>
+                    <select id="kit-active-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <option value="false">次季持ち越し (デフォルト / 非アクティブ)</option>
+                        <option value="true">今季有効 (ガチャ対象にする)</option>
+                    </select>
                 </div>
 
-                <div class="flex justify-end gap-2 pt-3">
-                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl">キャンセル</button>
-                    <button type="submit" class="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl shadow-lg">保存する</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">組立状態（ステータス）</label>
+                    <select id="kit-status-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <option value="unbuilt">未組立 (デフォルト)</option>
+                        <option value="assembly">仮組</option>
+                        <option value="finished">完成</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">表示用レアリティ</label>
+                    <select id="kit-rarity" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-orbitron">
+                        <option value="UR">UR (Ultra Rare)</option>
+                        <option value="SSR">SSR (Super Special Rare)</option>
+                        <option value="SR">SR (Super Rare)</option>
+                        <option value="R">R (Rare)</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeAddModal(event)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-bold rounded-lg">キャンセル</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold rounded-lg shadow-lg">保存する</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: BACKUP -->
-    <div id="backup-modal" class="modal-overlay fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="scifi-panel max-w-lg w-full p-6 rounded-2xl relative border border-sky-500/40" onclick="event.stopPropagation()">
+    <!-- MODAL: ADD / EDIT PAINT -->
+    <div id="add-paint-modal" class="modal-overlay fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="scifi-panel max-w-md w-full p-6 rounded-2xl relative border border-amber-500/50" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center mb-3">
-                <h3 id="backup-modal-title" class="text-lg font-bold text-white">データのバックアップと復元</h3>
-                <button type="button" onclick="closeBackupModal()" class="text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer">
+                <h3 id="paint-modal-title" class="text-xl font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-fill-drip text-amber-400"></i> 塗料を登録・編集
+                </h3>
+                <button type="button" class="close-btn text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer" onclick="closeAddPaintModal()">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <div class="space-y-3">
+            <form id="paint-form" onsubmit="savePaint(event)" class="space-y-3">
+                <input type="hidden" id="paint-id">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">登録日 (年月日)</label>
+                    <input type="date" id="paint-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-cyan-300 font-orbitron focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">JANコード</label>
+                    <input type="text" id="paint-jan" placeholder="4973028......" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-amber-300 font-mono focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">塗料名 / 番号 <span class="text-rose-400">*</span></label>
+                    <input type="text" id="paint-name" required placeholder="例: C1 フラットブラック" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">メーカー</label>
+                        <select id="paint-brand" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 font-bold">
+                            <option value="クレオス">Mr.カラー (クレオス)</option>
+                            <option value="ガイアノーツ">ガイアカラー</option>
+                            <option value="タミヤ">タミヤ (TAMIYA)</option>
+                            <option value="シタデル">シタデル (CITADEL)</option>
+                            <option value="ファレホ">ファレホ (Vallejo)</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">種類</label>
+                        <select id="paint-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                            <option value="ラッカー">ラッカー (油性)</option>
+                            <option value="水性アクリル">水性アクリル</option>
+                            <option value="エナメル">エナメル</option>
+                            <option value="サーフェイサー">サフ / 仕上げ材</option>
+                            <option value="溶剤/接着剤">溶剤 / 接着剤 / 工具</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">残量ステータス <span class="text-amber-400">*</span></label>
+                    <select id="paint-status" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm font-bold text-white focus:outline-none focus:border-amber-500">
+                        <option value="Full">🟢 Full (満量 / 新品)</option>
+                        <option value="A little">🟡 A little (残量わずか)</option>
+                        <option value="Empty">🔴 Empty (使い切り / 実在庫から除外)</option>
+                    </select>
+                    <p class="text-[11px] text-slate-400 mt-1">※Emptyに設定すると実在庫表から消えますが、登録書（データ）には保持されます。</p>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeAddPaintModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-bold rounded-lg">キャンセル</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-lg shadow-lg">塗料を保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: STORE SCAN / INVENTORY CHECK RESULT -->
+    <div id="store-check-modal" class="modal-overlay fixed inset-0 bg-black/90 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
+        <div class="scifi-panel max-w-lg w-full p-6 rounded-2xl relative border-2 text-center" id="store-check-card" onclick="event.stopPropagation()">
+            <!-- Dynamic Store Result Inject -->
+        </div>
+    </div>
+
+    <!-- MODAL: POOL CONFIGURATION -->
+    <div id="config-modal" class="modal-overlay fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="scifi-panel max-w-md w-full p-6 rounded-2xl relative border border-cyan-500/50" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-cyan-400"></i> シーズンルール設定
+                </h3>
+                <button type="button" class="close-btn text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer" onclick="closeConfigModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">今シーズンの目標排出数（ラストワン判定上限）</label>
+                    <input type="number" id="cfg-target-total" min="1" max="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 font-orbitron">
+                    <p class="text-[11px] text-slate-400 mt-1">例：有効プールが10個あっても「5個」に設定した場合、5個引かれた時点でラストワン賞が発動し、残りの5個は自動的に次シーズンへ持ち越されます。</p>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="closeConfigModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-bold rounded-lg">キャンセル</button>
+                    <button type="button" onclick="saveConfig()" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold rounded-lg shadow-lg font-bold">設定を保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BACKUP / TEXT IMPORT & EXPORT -->
+    <div id="backup-modal" class="modal-overlay fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="scifi-panel max-w-lg w-full p-6 rounded-2xl relative border border-indigo-500/50" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="backup-modal-title" class="text-xl font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-share-nodes text-indigo-400"></i> スマートバックアップ＆復元
+                </h3>
+                <button type="button" class="close-btn text-slate-400 hover:text-white p-2 text-xl font-bold rounded-lg cursor-pointer" onclick="closeBackupModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
                 <p id="backup-modal-desc" class="text-xs text-slate-300">
-                    登録した書籍データをテキスト（JSON形式）としてバックアップ・復元できます。<br>以前のバージョンのバックアップデータにも対応しています。
+                    積みプラ・塗料在庫・今季シーズン状態・履歴・回転数を一緒に保存します。
                 </p>
 
-                <textarea id="backup-textarea" rows="8" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-sky-300 font-mono focus:outline-none focus:border-sky-500 leading-relaxed"></textarea>
+                <textarea id="backup-textarea" rows="7" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-cyan-300 font-mono focus:outline-none focus:border-indigo-500 leading-relaxed" placeholder="ここにバックアップテキストを貼り付けてください..."></textarea>
 
-                <div class="flex justify-between items-center pt-2">
-                    <span id="backup-msg" class="text-xs text-emerald-400 font-bold"></span>
-                    <div class="flex gap-2">
-                        <button type="button" onclick="closeBackupModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl">閉じる</button>
-                        <button id="backup-action-btn" type="button" class="px-5 py-2 bg-sky-600 text-white text-xs font-bold rounded-xl shadow-lg">実行</button>
+                <div class="flex flex-wrap justify-between items-center gap-2 pt-2">
+                    <span id="backup-status-msg" class="text-xs text-indigo-400 font-bold w-full sm:w-auto"></span>
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
+                        <button type="button" onclick="closeBackupModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg">
+                            閉じる
+                        </button>
+                        <button id="backup-share-btn" type="button" onclick="shareToIosNotes()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-lg flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i> メモ帳に保存
+                        </button>
+                        <button id="backup-action-btn" type="button" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow-lg">
+                            実行
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- CUT-IN OVERLAY -->
+    <div id="cutin-overlay" class="modal-overlay fixed inset-0 z-50 hidden flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl p-4" onclick="skipCutIn(event)">
+        <div id="cutin-video-wrapper" class="w-full max-w-3xl flex flex-col items-center justify-center relative">
+            <div id="cutin-fallback" class="text-center p-8 max-w-lg w-full"></div>
+            <button type="button" onclick="skipCutIn(event)" class="mt-6 px-6 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-orbitron font-bold rounded-full border border-cyan-500/40 tracking-widest transition">
+                SKIP CUT-IN <i class="fa-solid fa-forward"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- RESULT MODAL -->
+    <div id="result-modal" class="modal-overlay fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex flex-col items-center justify-center p-4">
+        <div id="result-card-container" class="w-full max-w-3xl text-center relative" onclick="event.stopPropagation()"></div>
+    </div>
+
     <script>
-        // --- APP STATE ---
-        let books = [];
-        try {
-            const raw = localStorage.getItem('book_manager_inventory_v2');
-            books = raw ? JSON.parse(raw) : [];
-        } catch(e) { books = []; }
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        let currentMode = 'home';
-        let currentGenreFilter = 'ALL';
-        let filterOnlyFavorite = false;
-        let scanTargetMode = 'home';
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
 
-        // --- CAMERA & SCANNER ENGINE (ROBUST ZXING INTEGRATION) ---
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+
+            if (type === 'roll') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(700, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'slash') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(120, now + 0.25);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } else if (type === 'ready') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(880, now + 0.1);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'lastone') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.setValueAtTime(400, now + 0.15);
+                osc.frequency.setValueAtTime(1200, now + 0.3);
+                gain.gain.setValueAtTime(0.35, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 1.0);
+                osc.start(now);
+                osc.stop(now + 1.0);
+            } else if (type === 'win') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                osc.frequency.setValueAtTime(783.99, now + 0.2);
+                osc.frequency.setValueAtTime(1046.50, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+                osc.start(now);
+                osc.stop(now + 0.8);
+            }
+        }
+    </script>
+
+    <script>
+        const GRADES = {
+            RG: { name: 'RG', badgeClass: 'bg-cyan-950 text-cyan-300 border border-cyan-700' },
+            HG: { name: 'HG', badgeClass: 'bg-sky-950 text-sky-300 border border-sky-700' },
+            HGUC: { name: 'HGUC', badgeClass: 'bg-blue-950 text-blue-300 border border-blue-700' },
+            HGCE: { name: 'HGCE', badgeClass: 'bg-indigo-950 text-indigo-300 border border-indigo-700' },
+            HGAC: { name: 'HGAC', badgeClass: 'bg-teal-950 text-teal-300 border border-teal-700' },
+            HGAW: { name: 'HGAW', badgeClass: 'bg-emerald-950 text-emerald-300 border border-emerald-700' },
+            FRs: { name: 'FRs', badgeClass: 'bg-fuchsia-950 text-fuchsia-300 border border-fuchsia-700' },
+            MGSD: { name: 'MGSD', badgeClass: 'bg-amber-950 text-amber-300 border border-amber-700' },
+            OTHER: { name: '-', badgeClass: 'bg-slate-800 text-slate-400 border border-slate-700' }
+        };
+
+        const CATEGORIES = {
+            LARGE: { name: '大型', badgeClass: 'cat-badge-large', icon: 'fa-shield-halved', color: '#f43f5e' },
+            CLEAR: { name: 'クリア', badgeClass: 'cat-badge-clear', icon: 'fa-sparkles', color: '#38bdf8' },
+            CCA: { name: '逆シャア', badgeClass: 'cat-badge-cca', icon: 'fa-jet-fighter', color: '#eab308' },
+            PBANDAI: { name: 'プレバン', badgeClass: 'cat-badge-pbandai', icon: 'fa-box', color: '#c084fc' },
+            GBASE: { name: 'ガンベ', badgeClass: 'cat-badge-gbase', icon: 'fa-store', color: '#34d399' },
+            RARE: { name: 'レア', badgeClass: 'cat-badge-rare', icon: 'fa-star', color: '#fb923c' },
+            LASTONE: { name: 'ラストワン', badgeClass: 'cat-badge-lastone', icon: 'fa-skull', color: '#f87171' },
+            NORMAL: { name: '通常', badgeClass: 'cat-badge-normal', icon: 'fa-cube', color: '#cbd5e1' }
+        };
+
+        const STATUS_TYPES = {
+            unbuilt: { name: '未組立', badgeClass: 'status-badge-unbuilt' },
+            assembly: { name: '仮組', badgeClass: 'status-badge-assembly' },
+            finished: { name: '完成', badgeClass: 'status-badge-finished' }
+        };
+
+        const PAINT_STATUS = {
+            'Full': { name: 'Full (満量)', badgeClass: 'paint-status-full', icon: 'fa-circle-check' },
+            'A little': { name: 'A little (僅か)', badgeClass: 'paint-status-little', icon: 'fa-triangle-exclamation' },
+            'Empty': { name: 'Empty (使い切り)', badgeClass: 'paint-status-empty', icon: 'fa-circle-xmark' }
+        };
+
+        const specialQuotes = [
+            "νガンダムは伊達じゃない！",
+            "ならば、今すぐ愚民ども全てに叡智を授けてみせろ！",
+            "作ってみる価値はありますぜ！",
+            "すごい……親父が熱中するわけだ",
+            "当たればどうということはない",
+            "色が舞い上がる、これが真の力か！",
+            "父さん……母さん、ごめん、俺は…行くよ！",
+            "それでも……守りたい世界があるんだ！",
+            "いいからよこせ、お前の全部"
+        ];
+
+        function getTodayString() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        let inventory = safeJsonParse(localStorage.getItem('gunpla_inventory_v3.9.5'), []);
+        let paintInventory = safeJsonParse(localStorage.getItem('gunpla_paint_inventory_v4.0.0'), []);
+        let pullHistory = safeJsonParse(localStorage.getItem('gunpla_history_v3.9.5'), []);
+        let totalPulls = safeJsonParse(localStorage.getItem('gunpla_total_pulls_v3.9.5'), 0);
+        let seasonDrawnCount = safeJsonParse(localStorage.getItem('gunpla_season_drawn_v3.9.5'), 0);
+        let lastUsedDate = safeJsonParse(localStorage.getItem('gunpla_last_used_date_v3.9.5'), getTodayString());
+
+        let appConfig = safeJsonParse(localStorage.getItem('gunpla_app_config_v3.9.5'), {
+            targetTotal: 5
+        });
+
+        let seasonActive = safeJsonParse(localStorage.getItem('gunpla_season_active_v3.9.5'), false);
+        let pendingState = safeJsonParse(localStorage.getItem('gunpla_pending_state_v3.9.5'), null);
+
+        let currentFilter = 'ALL';
+        let currentPaintFilter = 'ACTIVE';
+        let sortAscending = true;
+        let cutInResolver = null;
+        let scannerTarget = 'kit'; // 'kit' | 'paint' | 'store_check'
+
+        function safeJsonParse(raw, fallback) {
+            try { const value = JSON.parse(raw); return value == null ? fallback : value; }
+            catch (_) { return fallback; }
+        }
+
+        function saveSeasonState() {
+            localStorage.setItem('gunpla_season_active_v3.9.5', JSON.stringify(seasonActive));
+            localStorage.setItem('gunpla_pending_state_v3.9.5', JSON.stringify(pendingState));
+        }
+
+        window.onload = function() {
+            renderStock();
+            renderPaintList();
+            updateStats();
+            renderGachaLineup();
+            applyGachaButtonUI();
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeAddModal();
+                    closeAddPaintModal();
+                    closeResultModal();
+                    closeBackupModal();
+                    closeConfigModal();
+                    closeScannerModal();
+                    closeStoreCheckModal();
+                }
+            });
+        };
+
+        // --- CAMERA SCANNER LOGIC ---
         const $ = id => document.getElementById(id);
-        
+        const video = $('preview');
+        const placeholder = $('placeholder');
+        const liveTag = $('liveTag');
+        const quickResult = $('quickResult');
+        const startBtn = $('startBtn');
+        const stopBtn = $('stopBtn');
+        const statusEl = $('status');
+
         let stream = null;
         let reader = null;
         let decodeControls = null;
-        let scanState = 'idle'; // 'idle' | 'opening' | 'scanning' | 'success'
+        let mode = 'idle';
         let busy = false;
         let runId = 0;
         let scriptPromise = null;
 
+        if (video) {
+            video.playsInline = true;
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+            video.muted = true;
+            video.autoplay = true;
+        }
+
         function status(text, error = false) {
-            const el = $('status');
-            if (!el) return;
-            el.textContent = text;
-            el.classList.toggle('text-rose-400', error);
-            el.classList.toggle('text-slate-400', !error);
+            if (!statusEl) return;
+            statusEl.textContent = text;
+            statusEl.classList.toggle('text-rose-400', error);
+            statusEl.classList.toggle('text-slate-400', !error);
         }
 
         function updateScannerUI() {
             const on = Boolean(stream);
-            const success = scanState === 'success';
+            const success = mode === 'success';
             const camEl = $('camera');
             if (camEl) {
-                camEl.classList.toggle('scanning', scanState === 'scanning');
+                camEl.classList.toggle('scanning', mode === 'scanning');
                 camEl.classList.toggle('success', success);
             }
-            if ($('placeholder'))$('placeholder').hidden = on;
-            if ($('liveTag'))$('liveTag').hidden = !on;
-            if ($('quickResult'))$('quickResult').hidden = !success || !on;
-            if ($('startBtn')) { $('startBtn').hidden = on; $('startBtn').disabled = busy; }
-            if ($('stopBtn')) { $('stopBtn').hidden = !on; $('stopBtn').disabled = busy; }
-            if ($('guideLabel')) {$('guideLabel').textContent = success ? '読み取り成功！' : '本のバーコード（ISBN）を合わせてください';
-            }
+            if (placeholder) placeholder.hidden = on;
+            if (liveTag) liveTag.hidden = !on;
+            if (quickResult) quickResult.hidden = !success || !on;
+            if (startBtn) { startBtn.hidden = on; startBtn.disabled = busy; }
+            if (stopBtn) { stopBtn.hidden = !on; stopBtn.disabled = busy; }
+            const guide = $('guideLabel');
+            if (guide) guide.textContent = success ? '読み取り成功！' : '緑の枠にバーコードを合わせてください';
         }
 
         function stopDecode() {
             if (decodeControls) {
-                try { decodeControls.stop(); } catch (e) {}
+                try { decodeControls.stop(); } catch (e) { console.warn(e); }
                 decodeControls = null;
             }
         }
@@ -550,7 +1140,7 @@
             const r = new ZXingBrowser.BrowserMultiFormatReader();
             const F = ZXingBrowser.BarcodeFormat;
             if (F && F.EAN_13 !== undefined) {
-                r.possibleFormats = [F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.CODE_128];
+                r.possibleFormats = [F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.CODE_128, F.CODE_39, F.ITF];
             }
             return r;
         }
@@ -578,74 +1168,71 @@
         }
 
         function acceptResult(value) {
-            if (scanState === 'success') return;
+            if (mode === 'success') return;
             const code = String(value);
-            if ($('quickCode'))$('quickCode').textContent = code;
-            scanState = 'success';
+            const qc = $('quickCode');
+            if (qc) qc.textContent = code;
+            mode = 'success';
             stopDecode();
             updateScannerUI();
-            status('バーコードを読み取りました');
+            status('バーコードを読み取りました。処理中...');
 
             try { navigator.vibrate?.(70); } catch(e) {}
 
             setTimeout(() => {
                 closeScannerModal();
-                handleScannedIsbn(code);
-            }, 500);
+                if (scannerTarget === 'kit') {
+                    handleScannedJanCode(code);
+                } else if (scannerTarget === 'paint') {
+                    handleScannedPaintJanCode(code);
+                } else if (scannerTarget === 'store_check') {
+                    performStoreCheck(code);
+                }
+            }, 600);
         }
 
         async function beginDecode() {
             const thisRun = ++runId;
             stopDecode();
             reader = makeReader();
-            scanState = 'scanning';
+            mode = 'scanning';
             updateScannerUI();
-            status('緑枠にバーコードを合わせてください。');
+            status('緑枠にバーコードを合わせてください。解析中です。');
 
-            const videoEl = $('preview');
-            const controls = await reader.decodeFromVideoElement(videoEl, (decoded, err, controls) => {
-                if (!decoded || thisRun !== runId || scanState !== 'scanning') return;
+            const controls = await reader.decodeFromVideoElement(video, (decoded, err, controls) => {
+                if (!decoded || thisRun !== runId || mode !== 'scanning') return;
                 try { controls.stop(); } catch(e) {}
                 acceptResult(decoded.getText());
             });
 
-            if (thisRun !== runId || scanState !== 'scanning') controls.stop();
+            if (thisRun !== runId || mode !== 'scanning') controls.stop();
             else decodeControls = controls;
         }
 
         async function startCamera() {
             if (busy || stream) return;
             busy = true;
-            scanState = 'opening';
+            mode = 'opening';
             updateScannerUI();
-            status('カメラを起動中...');
-
-            const videoEl = $('preview');
-            videoEl.playsInline = true;
-            videoEl.setAttribute('playsinline', '');
-            videoEl.setAttribute('webkit-playsinline', '');
-            videoEl.muted = true;
-            videoEl.autoplay = true;
-
+            status('カメラを起動しています...');
             try {
-                if (!isSecureContext || !navigator.mediaDevices?.getUserMedia) {
-                    throw new Error('カメラを使用するにはHTTPS環境が必要です。');
-                }
+                if (!isSecureContext || !navigator.mediaDevices?.getUserMedia) throw new Error('HTTPS_REQUIRED');
                 const newStream = await navigator.mediaDevices.getUserMedia({
                     audio: false,
                     video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } }
                 });
                 stream = newStream;
-                videoEl.srcObject = newStream;
-                await videoEl.play();
+                video.srcObject = newStream;
+                await video.play();
                 updateScannerUI();
+                status('解析プログラムを準備中...');
                 await ensureLibrary();
                 await beginDecode();
             } catch(e) {
                 console.error(e);
                 cleanup();
-                scanState = 'idle';
-                status(`カメラ起動エラー: ${e.message || 'カメラ権限を確認してください'}`, true);
+                mode = 'idle';
+                status('カメラ起動エラー: HTTPS環境か確認してください', true);
             } finally {
                 busy = false;
                 updateScannerUI();
@@ -659,164 +1246,622 @@
                 for (const track of stream.getTracks()) track.stop();
                 stream = null;
             }
-            const videoEl = $('preview');
-            if (videoEl) {
-                videoEl.pause();
-                videoEl.srcObject = null;
+            if (video) {
+                video.pause();
+                video.srcObject = null;
             }
         }
 
         function stopCamera() {
             if (busy) return;
             cleanup();
-            scanState = 'idle';
+            mode = 'idle';
             updateScannerUI();
             status('カメラを停止しました。');
         }
 
-        function openScannerModal(targetMode) {
-            scanTargetMode = targetMode;
-            $('scanner-title').innerHTML = targetMode === 'home' 
-                ? `<i class="fa-solid fa-barcode text-emerald-400"></i> 家で登録スキャン`
-                : `<i class="fa-solid fa-store text-amber-400"></i> お店で確認スキャン`;
-            
-            $('scanner-modal').classList.remove('hidden');
+        function openScannerModal(targetMode = 'kit') {
+            scannerTarget = targetMode;
+            const titleEl = document.getElementById('scanner-modal-title');
+            if (titleEl) {
+                if (targetMode === 'kit') {
+                    titleEl.innerHTML = `<i class="fa-solid fa-barcode text-emerald-400"></i> ガンプラ バーコードスキャン`;
+                } else if (targetMode === 'paint') {
+                    titleEl.innerHTML = `<i class="fa-solid fa-fill-drip text-amber-400"></i> 塗料 バーコード登録`;
+                } else if (targetMode === 'store_check') {
+                    titleEl.innerHTML = `<i class="fa-solid fa-store text-amber-400"></i> 🔍 店頭 在庫チェッカースキャン`;
+                }
+            }
+            document.getElementById('scanner-modal').classList.remove('hidden');
             startCamera();
         }
 
         function closeScannerModal() {
             stopCamera();
-            $('scanner-modal').classList.add('hidden');
+            document.getElementById('scanner-modal').classList.add('hidden');
         }
 
-        function manualIsbnPrompt() {
-            const isbn = prompt("13桁のISBNコードを入力してください:");
-            if (isbn && isbn.trim()) {
+        if (startBtn) startBtn.addEventListener('click', startCamera);
+        if (stopBtn) stopBtn.addEventListener('click', stopCamera);
+
+        function manualJanPrompt() {
+            const code = prompt("JANコードを入力してください:");
+            if (code && code.trim()) {
                 closeScannerModal();
-                handleScannedIsbn(isbn.trim());
-            }
-        }
-
-        // --- GENERAL APP FUNCTIONS ---
-        window.onload = function() {
-            renderBookList();
-            updateStats();
-        };
-
-        function saveBooks() {
-            try {
-                localStorage.setItem('book_manager_inventory_v2', JSON.stringify(books));
-            } catch(e){}
-            renderBookList();
-            updateStats();
-        }
-
-        function switchMode(mode) {
-            currentMode = mode;
-            const homeSec = $('section-home');
-            const shopSec = $('section-shop');
-            const homeBtn = $('mode-home-btn');
-            const shopBtn = $('mode-shop-btn');
-
-            if (mode === 'home') {
-                homeSec.classList.remove('hidden');
-                shopSec.classList.add('hidden');
-                homeBtn.className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-sky-600 text-white shadow-md";
-                shopBtn.className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-400 hover:text-white transition flex items-center gap-2";
-            } else {
-                homeSec.classList.add('hidden');
-                shopSec.classList.remove('hidden');
-                shopBtn.className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md";
-                homeBtn.className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-400 hover:text-white transition flex items-center gap-2";
-            }
-        }
-
-        function updateStats() {
-            $('stat-total').innerText = `${books.length} 冊`;
-            $('stat-manga').innerText = `${books.filter(b => b.genre === '漫画').length} 冊`;
-            $('stat-ranobe').innerText = `${books.filter(b => b.genre === 'ラノベ').length} 冊`;
-            $('stat-novel').innerText = `${books.filter(b => b.genre === '小説').length} 冊`;
-            $('stat-other').innerText = `${books.filter(b => b.genre === 'その他').length} 冊`;
-        }
-
-        function setGenreFilter(genre) {
-            currentGenreFilter = genre;
-            document.querySelectorAll('.genre-filter-btn').forEach(btn => {
-                if (btn.dataset.genre === genre) {
-                    btn.className = "genre-filter-btn px-3 py-1 rounded-lg font-bold bg-sky-600 text-white";
-                } else {
-                    btn.className = "genre-filter-btn px-3 py-1 rounded-lg font-bold text-slate-400 hover:text-white";
+                if (scannerTarget === 'kit') {
+                    handleScannedJanCode(code.trim());
+                } else if (scannerTarget === 'paint') {
+                    handleScannedPaintJanCode(code.trim());
+                } else if (scannerTarget === 'store_check') {
+                    performStoreCheck(code.trim());
                 }
-            });
-            renderBookList();
-        }
-
-        function toggleFavFilter() {
-            filterOnlyFavorite = !filterOnlyFavorite;
-            const btn = $('fav-toggle-btn');
-            const icon = $('fav-toggle-icon');
-
-            if (filterOnlyFavorite) {
-                btn.className = "px-3 py-1.5 bg-amber-500 text-slate-950 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 shadow-lg shadow-amber-500/20";
-                icon.className = "fa-solid fa-star";
-            } else {
-                btn.className = "px-3 py-1.5 bg-slate-950 border border-amber-500/40 text-amber-400 hover:bg-amber-950/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0";
-                icon.className = "fa-regular fa-star";
             }
-            renderBookList();
         }
 
-        function renderBookList() {
-            const tbody = $('book-table-body');
-            if (!tbody) return;
-            tbody.innerHTML = '';
+        function openPaintScannerModal() {
+            openScannerModal('paint');
+        }
 
-            const searchQ = ($('search-input')?.value || '').toLowerCase().trim();
+        function openStoreScanModal() {
+            openScannerModal('store_check');
+        }
 
-            const filtered = books.filter(b => {
-                const matchesGenre = (currentGenreFilter === 'ALL') || (b.genre === currentGenreFilter);
-                const matchesFav = !filterOnlyFavorite || b.favorite;
-                const matchesSearch = !searchQ || 
-                    (b.title || '').toLowerCase().includes(searchQ) || 
-                    (b.publisher || '').toLowerCase().includes(searchQ) || 
-                    (b.isbn || '').includes(searchQ);
+        // --- STREAMING_CHUNK:Implementing Kit Scanning & Registration Logic with new defaults (Active: false, Status: unbuilt)... ---
+        function handleScannedJanCode(janCode) {
+            const matchedKit = inventory.find(item => item.jan === janCode);
 
-                return matchesGenre && matchesFav && matchesSearch;
-            });
+            openAddModal();
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-500 text-xs">登録されている本がありません</td></tr>`;
+            const janEl = document.getElementById('kit-jan');
+            const banner = document.getElementById('autofill-banner');
+            if (janEl) janEl.value = janCode;
+
+            if (matchedKit) {
+                document.getElementById('kit-name').value = matchedKit.name || '';
+                document.getElementById('kit-grade').value = matchedKit.grade || 'HG';
+                document.getElementById('kit-category').value = matchedKit.category || 'NORMAL';
+                document.getElementById('kit-active-status').value = 'false'; // DEFAULT: 次季持ち越し
+                document.getElementById('kit-status-type').value = 'unbuilt'; // DEFAULT: 未組立
+                document.getElementById('kit-rarity').value = matchedKit.rarity || 'R';
+                if (matchedKit.date) {
+                    document.getElementById('kit-date').value = matchedKit.date;
+                }
+                if (banner) banner.classList.remove('hidden');
+            } else {
+                if (banner) banner.classList.add('hidden');
+            }
+        }
+
+        // --- PAINT SCAN HANDLING ---
+        function handleScannedPaintJanCode(janCode) {
+            const matchedPaint = paintInventory.find(item => item.jan === janCode);
+            openAddPaintModal();
+
+            const janEl = document.getElementById('paint-jan');
+            if (janEl) janEl.value = janCode;
+
+            if (matchedPaint) {
+                document.getElementById('paint-name').value = matchedPaint.name || '';
+                document.getElementById('paint-brand').value = matchedPaint.brand || 'クレオス';
+                document.getElementById('paint-type').value = matchedPaint.type || 'ラッカー';
+                document.getElementById('paint-status').value = matchedPaint.status || 'Full';
+            }
+        }
+
+        // --- STORE CHECKER LOGIC ---
+        function performStoreCheck(janCode) {
+            const matches = paintInventory.filter(item => item.jan === janCode);
+            const card = document.getElementById('store-check-card');
+            const modal = document.getElementById('store-check-modal');
+
+            if (!card || !modal) return;
+            playSound('ready');
+
+            let html = '';
+            if (matches.length > 0) {
+                const activeMatch = matches.find(m => m.status !== 'Empty');
+                
+                if (activeMatch) {
+                    playSound('win');
+                    card.className = "scifi-panel max-w-lg w-full p-6 rounded-2xl relative border-2 border-emerald-500 shadow-[0_0_50px_rgba(34,197,94,0.4)] text-center";
+                    html = `
+                        <div class="inline-block px-3 py-1 font-orbitron font-black text-xs rounded-full bg-emerald-600 text-white tracking-widest mb-3">
+                            ✅ 家に在庫があります！ (買わなくてOK)
+                        </div>
+                        <h2 class="text-2xl font-black text-emerald-300 mb-1">${activeMatch.name}</h2>
+                        <div class="text-xs text-slate-300 mb-3">${activeMatch.brand} · ${activeMatch.type}</div>
+                        <div class="p-3 bg-emerald-950/80 border border-emerald-700/60 rounded-xl mb-4 text-emerald-200 text-sm font-bold flex justify-center items-center gap-2">
+                            <span>現在のステータス:</span>
+                            <span class="px-2.5 py-0.5 rounded ${PAINT_STATUS[activeMatch.status]?.badgeClass}">${PAINT_STATUS[activeMatch.status]?.name}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">登録日: ${activeMatch.date || '-'}</p>
+                    `;
+                } else {
+                    playSound('slash');
+                    card.className = "scifi-panel max-w-lg w-full p-6 rounded-2xl relative border-2 border-amber-500 shadow-[0_0_50px_rgba(234,179,8,0.4)] text-center";
+                    html = `
+                        <div class="inline-block px-3 py-1 font-orbitron font-black text-xs rounded-full bg-amber-600 text-black font-bold tracking-widest mb-3">
+                            ⚠️ 過去に所有（現在は Empty / 使い切り）
+                        </div>
+                        <h2 class="text-2xl font-black text-amber-200 mb-1">${matches[0].name}</h2>
+                        <div class="text-xs text-slate-300 mb-3">${matches[0].brand} · ${matches[0].type}</div>
+                        <div class="p-3 bg-amber-950/80 border border-amber-700/60 rounded-xl mb-4 text-amber-200 text-xs">
+                            実在庫は「Empty (使い切り)」となっています。買い足しの推奨タイミングです！
+                        </div>
+                    `;
+                }
+            } else {
+                card.className = "scifi-panel max-w-lg w-full p-6 rounded-2xl relative border-2 border-cyan-400 shadow-[0_0_50px_rgba(56,189,248,0.4)] text-center";
+                html = `
+                    <div class="inline-block px-3 py-1 font-orbitron font-black text-xs rounded-full bg-cyan-600 text-white tracking-widest mb-3">
+                        ℹ️ 未登録の塗料です
+                    </div>
+                    <h2 class="text-xl font-bold text-white mb-2 font-mono">JAN: ${janCode}</h2>
+                    <p class="text-xs text-slate-300 mb-4">この塗料はご自宅の在庫データベースに登録されていません。</p>
+                    <button onclick="closeStoreCheckModal(); handleScannedPaintJanCode('${janCode}');" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg mb-2">
+                        今すぐ家に登録する
+                    </button>
+                `;
+            }
+
+            html += `
+                <div class="mt-4 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="closeStoreCheckModal()" class="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg">
+                        閉じる
+                    </button>
+                </div>
+            `;
+
+            card.innerHTML = html;
+            modal.classList.remove('hidden');
+        }
+
+        function closeStoreCheckModal() {
+            document.getElementById('store-check-modal').classList.add('hidden');
+        }
+
+        // --- GACHA UI & STATE MANAGEMENT ---
+        function generateRandomMode() {
+            const rand = Math.random();
+            if (rand < 0.15) return 'rainbow';
+            if (rand < 0.35) return 'green';
+            if (rand < 0.50) return 'red';
+            return 'normal';
+        }
+
+        function applyGachaButtonUI() {
+            const btn = document.getElementById('main-gacha-btn');
+            const label = document.getElementById('main-btn-label');
+            const sphere = document.getElementById('capsule-sphere');
+            const statusText = document.getElementById('machine-status-text');
+            const subText = document.getElementById('machine-sub-text');
+
+            if (!btn) return;
+
+            if (!seasonActive) {
+                btn.className = "w-full py-4 px-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-900/40 border border-emerald-300/40 transition transform active:scale-95 flex items-center justify-center gap-3 text-lg font-orbitron";
+                if (label) label.innerText = "シーズンを開始する";
+                if (statusText) statusText.innerText = "SYSTEM STANDBY";
+                if (subText) subText.innerText = "ボタンを押してシーズンを開始・プールをセット";
+                if (sphere) sphere.className = "w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 border-2 border-slate-600 shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105";
                 return;
             }
 
-            filtered.forEach(b => {
+            if (!pendingState) {
+                pendingState = generateRandomMode();
+                saveSeasonState();
+            }
+
+            if (subText) subText.innerText = "ガチャを起動してキットを抽出";
+
+            if (pendingState === 'rainbow') {
+                btn.className = "w-full py-4 px-6 bg-gradient-to-r from-red-600 via-emerald-500 to-cyan-500 text-white font-extrabold rounded-xl shadow-2xl border-2 border-yellow-300 glow-rainbow transition transform active:scale-95 flex items-center justify-center gap-3 text-lg font-orbitron";
+                if (label) label.innerText = "🔥 確定モード起動（タップ）";
+                if (statusText) statusText.innerText = "CRITICAL HIGH SENSITIVITY";
+                if (sphere) sphere.className = "w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 border-2 border-yellow-400 shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105 glow-rainbow";
+            } else if (pendingState === 'green') {
+                btn.className = "w-full py-4 px-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold rounded-xl shadow-lg glow-green border border-emerald-300 transition transform active:scale-95 flex items-center justify-center gap-3 text-lg font-orbitron";
+                if (label) label.innerText = "⚡ 高確率反応（タップ）";
+                if (statusText) statusText.innerText = "ENERGY DENSITY ELEVATED";
+                if (sphere) sphere.className = "w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 border-2 border-emerald-400 shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105 glow-green";
+            } else if (pendingState === 'red') {
+                btn.className = "w-full py-4 px-6 bg-gradient-to-r from-rose-600 to-red-700 text-white font-extrabold rounded-xl shadow-lg glow-red border border-rose-300 transition transform active:scale-95 flex items-center justify-center gap-3 text-lg font-orbitron";
+                if (label) label.innerText = "⚠️ 警告モード（タップ）";
+                if (statusText) statusText.innerText = "OVERHEAT ALERT";
+                if (sphere) sphere.className = "w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 border-2 border-rose-500 shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105 glow-red";
+            } else {
+                btn.className = "w-full py-4 px-6 bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold rounded-xl shadow-lg shadow-cyan-900/40 border border-cyan-300/40 transition transform active:scale-95 flex items-center justify-center gap-3 text-lg font-orbitron";
+                if (label) label.innerText = "ガチャを1回引く";
+                if (statusText) statusText.innerText = "SYSTEM READY";
+                if (sphere) sphere.className = "w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 border-2 border-cyan-400/50 shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500 group-hover:scale-105";
+            }
+        }
+
+        async function handleGachaAction() {
+            if (!seasonActive) {
+                const activePool = inventory.filter(i => i.active && i.category !== 'LASTONE');
+                if (activePool.length === 0) {
+                    alert('今シーズン有効な通常キットがありません。「積みプラ管理」画面でキットを追加または有効化してください。');
+                    return;
+                }
+
+                seasonActive = true;
+                pendingState = generateRandomMode();
+                saveSeasonState();
+                playSound('ready');
+                applyGachaButtonUI();
+                return;
+            }
+
+            const activePool = inventory.filter(i => i.active && i.category !== 'LASTONE');
+            if (activePool.length === 0) {
+                alert('今シーズン有効な通常キットがありません。「積みプラ管理」からキットをセットしてください。');
+                seasonActive = false;
+                saveSeasonState();
+                applyGachaButtonUI();
+                return;
+            }
+
+            playSound('roll');
+            triggerFlashSlash();
+            await delay(320);
+
+            const randomIndex = Math.floor(Math.random() * activePool.length);
+            const pickedKit = activePool[randomIndex];
+
+            pickedKit.active = false;
+            seasonDrawnCount += 1;
+            totalPulls += 1;
+
+            let resultKits = [pickedKit];
+            let isLastOneTriggered = false;
+
+            if (seasonDrawnCount >= appConfig.targetTotal || inventory.filter(i => i.active && i.category !== 'LASTONE').length === 0) {
+                isLastOneTriggered = true;
+                const lastOnePool = inventory.filter(i => i.category === 'LASTONE');
+                
+                if (lastOnePool.length > 0) {
+                    const lOneKit = lastOnePool[Math.floor(Math.random() * lastOnePool.length)];
+                    lOneKit.active = false;
+                    resultKits.push(lOneKit);
+                }
+                seasonDrawnCount = 0;
+                seasonActive = false;
+            }
+
+            pendingState = seasonActive ? generateRandomMode() : null;
+            saveSeasonState();
+            saveInventory();
+
+            if (isLastOneTriggered) {
+                await playLastOneCutIn();
+            } else if (pickedKit.category !== 'NORMAL') {
+                await playCutInAnimation(pickedKit.category);
+            }
+
+            resultKits.forEach(k => {
+                pullHistory.unshift({
+                    ...k,
+                    timestamp: new Date().toLocaleString('ja-JP') + (k.category === 'LASTONE' ? ' 【🔥ラストワン賞】' : '')
+                });
+            });
+            localStorage.setItem('gunpla_history_v3.9.5', JSON.stringify(pullHistory));
+
+            showResultsModal(resultKits, isLastOneTriggered);
+            applyGachaButtonUI();
+        }
+
+        function playLastOneCutIn() {
+            return new Promise((resolve) => {
+                cutInResolver = resolve;
+                const overlay = document.getElementById('cutin-overlay');
+                const fallbackElem = document.getElementById('cutin-fallback');
+
+                overlay.classList.remove('hidden');
+                triggerFlashSlash();
+
+                fallbackElem.innerHTML = `
+                    <div class="scifi-panel p-8 rounded-2xl border-4 border-red-500 bg-red-950/90 animate-pulse shadow-[0_0_80px_red]">
+                        <div class="inline-block px-4 py-1.5 font-orbitron font-black text-sm rounded-full bg-red-600 text-white tracking-widest mb-4">
+                            🔥 LAST ONE BONUS 🔥
+                        </div>
+                        <h2 class="text-3xl sm:text-5xl font-black text-amber-300 tracking-wider mb-4 font-orbitron drop-shadow-[0_0_25px_yellow]">
+                            「まだだ、、、まだ終わらんよ！」
+                        </h2>
+                        <p class="text-slate-200 text-sm">シーズン達成＆ラストワン特別枠獲得！</p>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    finishCutIn();
+                }, 3500);
+            });
+        }
+
+        function playCutInAnimation(categoryKey) {
+            return new Promise((resolve) => {
+                cutInResolver = resolve;
+                const overlay = document.getElementById('cutin-overlay');
+                const fallbackElem = document.getElementById('cutin-fallback');
+
+                overlay.classList.remove('hidden');
+                triggerFlashSlash();
+
+                if (categoryKey === 'LARGE') {
+                    playSound('slash');
+                    fallbackElem.innerHTML = `
+                        <div class="scifi-panel p-8 rounded-2xl border-2 border-rose-500 bg-rose-950/80 animate-bounce">
+                            <div class="inline-block px-3 py-1 font-orbitron font-black text-xs rounded-full bg-rose-600 text-white tracking-widest mb-3">
+                                ⚠️ HIGH ENERGY SIGNAL ⚠️
+                            </div>
+                            <h2 class="text-3xl sm:text-4xl font-black text-rose-400 tracking-wider mb-2 font-orbitron drop-shadow-[0_0_20px_red]">
+                                大型ユニット到達！
+                            </h2>
+                        </div>
+                    `;
+                } else {
+                    playSound('win');
+                    const quote = specialQuotes[Math.floor(Math.random() * specialQuotes.length)];
+                    fallbackElem.innerHTML = `
+                        <div class="scifi-panel p-8 rounded-2xl border-2 border-cyan-400 bg-cyan-950/90 shadow-[0_0_50px_rgba(56,189,248,0.4)]">
+                            <div class="inline-block px-3 py-1 font-orbitron font-black text-xs rounded-full bg-cyan-500 text-black tracking-widest mb-3 font-bold">
+                                ⚡ SPECIAL CUT-IN ⚡
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-cyan-200 tracking-wider mb-2 leading-relaxed">
+                                「${quote}」
+                            </h2>
+                        </div>
+                    `;
+                }
+
+                setTimeout(() => {
+                    finishCutIn();
+                }, 2800);
+            });
+        }
+
+        function skipCutIn(e) {
+            if (e) e.stopPropagation();
+            finishCutIn();
+        }
+
+        function finishCutIn() {
+            document.getElementById('cutin-overlay').classList.add('hidden');
+            if (cutInResolver) {
+                cutInResolver();
+                cutInResolver = null;
+            }
+        }
+
+        function triggerFlashSlash() {
+            const flash = document.getElementById('flash-screen');
+            if (!flash) return;
+            flash.style.opacity = '1';
+            setTimeout(() => { flash.style.opacity = '0'; }, 200);
+        }
+
+        function switchTab(tab) {
+            ['gacha', 'stock', 'paint', 'history'].forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const navBtn = document.getElementById(`nav-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (navBtn) navBtn.className = "px-3 sm:px-4 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition flex items-center gap-2";
+            });
+
+            const activeSec = document.getElementById(`tab-${tab}`);
+            const activeNavBtn = document.getElementById(`nav-${tab}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeNavBtn) activeNavBtn.className = "px-3 sm:px-4 py-1.5 rounded-lg font-bold transition flex items-center gap-2 bg-cyan-600 text-white shadow-md";
+
+            if (tab === 'gacha') renderGachaLineup();
+            if (tab === 'stock') renderStock();
+            if (tab === 'paint') renderPaintList();
+            if (tab === 'history') renderHistory();
+        }
+
+        function renderGachaLineup() {
+            const container = document.getElementById('gacha-lineup-grid');
+            const badge = document.getElementById('lineup-count-badge');
+            const lastOneContainer = document.getElementById('lastone-special-container');
+            if (!container) return;
+
+            const activeItems = inventory.filter(i => i.active && i.category !== 'LASTONE');
+            if (badge) badge.innerText = `${activeItems.length} KITS`;
+
+            if (lastOneContainer) {
+                const lastOneItems = inventory.filter(i => i.category === 'LASTONE');
+                if (lastOneItems.length === 0) {
+                    lastOneContainer.innerHTML = `<span class="text-xs text-slate-500 italic">ラストワン枠のキットが設定されていません（積みプラ管理から設定可能）</span>`;
+                } else {
+                    lastOneContainer.innerHTML = lastOneItems.map(item => {
+                        const gradeInfo = GRADES[item.grade] || GRADES.OTHER;
+                        return `
+                        <div class="px-3 py-1 rounded-lg bg-rose-950/80 border border-rose-500/50 flex items-center gap-2 text-xs font-bold text-rose-200">
+                            <span class="px-1.5 py-0.5 rounded text-[9px] bg-rose-600 text-white font-orbitron">ラストワン</span>
+                            ${item.grade && item.grade !== 'OTHER' ? `<span class="px-1.5 py-0.5 rounded text-[9px] ${gradeInfo.badgeClass}">${item.grade}</span>` : ''}
+                            <span>${item.name}</span>
+                            <span class="text-[10px] text-rose-400 font-orbitron">${item.rarity}</span>
+                        </div>
+                    `}).join('');
+                }
+            }
+
+            if (activeItems.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-8 text-center text-slate-500 text-sm">
+                        今シーズン有効な通常キットがありません。「積みプラ管理」からキットを追加・有効化してください。
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            activeItems.forEach(item => {
+                const gradeInfo = GRADES[item.grade] || GRADES.OTHER;
+                const catInfo = CATEGORIES[item.category] || CATEGORIES.NORMAL;
+                const statusInfo = STATUS_TYPES[item.status || 'unbuilt'];
+                html += `
+                    <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl flex items-center justify-between gap-2">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                                ${item.grade && item.grade !== 'OTHER' ? `
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${gradeInfo.badgeClass}">
+                                    ${gradeInfo.name}
+                                </span>` : ''}
+                                <span class="px-2 py-0.5 rounded text-[9px] font-bold ${catInfo.badgeClass}">
+                                    <i class="fa-solid ${catInfo.icon}"></i> ${catInfo.name}
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[9px] font-bold ${statusInfo.badgeClass}">
+                                    ${statusInfo.name}
+                                </span>
+                                <span class="text-[9px] font-orbitron font-bold text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">
+                                    ${item.rarity}
+                                </span>
+                            </div>
+                            <div class="text-xs font-bold text-white truncate">${item.name}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateStats() {
+            const activePool = inventory.filter(i => i.active && i.category !== 'LASTONE');
+            const total = activePool.length;
+            const totalEl = document.getElementById('stat-total-count');
+            if (totalEl) totalEl.innerText = `${total} 個`;
+
+            const progEl = document.getElementById('stat-season-progress');
+            if (progEl) progEl.innerText = `${seasonDrawnCount} / ${appConfig.targetTotal}`;
+
+            const pullEl = document.getElementById('stat-total-pulls');
+            if (pullEl) pullEl.innerText = `${totalPulls} 回`;
+
+            const largeEl = document.getElementById('stat-large-count');
+            if (largeEl) largeEl.innerText = `${activePool.filter(i => i.category === 'LARGE').length} 個`;
+
+            renderGachaLineup();
+        }
+
+        function saveInventory() {
+            localStorage.setItem('gunpla_inventory_v3.9.5', JSON.stringify(inventory));
+            localStorage.setItem('gunpla_total_pulls_v3.9.5', JSON.stringify(totalPulls));
+            localStorage.setItem('gunpla_season_drawn_v3.9.5', JSON.stringify(seasonDrawnCount));
+            localStorage.setItem('gunpla_last_used_date_v3.9.5', JSON.stringify(lastUsedDate));
+            updateStats();
+            renderStock();
+        }
+
+        function savePaintInventory() {
+            localStorage.setItem('gunpla_paint_inventory_v4.0.0', JSON.stringify(paintInventory));
+            localStorage.setItem('gunpla_last_used_date_v3.9.5', JSON.stringify(lastUsedDate));
+            renderPaintList();
+        }
+
+        function toggleSortOrder() {
+            sortAscending = !sortAscending;
+            const btnLabel = document.getElementById('sort-order-label');
+            const btnIcon = document.getElementById('sort-order-icon');
+            if (sortAscending) {
+                if (btnLabel) btnLabel.innerText = '昇順';
+                if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-down-short-wide';
+            } else {
+                if (btnLabel) btnLabel.innerText = '降順';
+                if (btnIcon) btnIcon.className = 'fa-solid fa-arrow-up-wide-short';
+            }
+            renderStock();
+        }
+
+        function renderStock() {
+            const tbody = document.getElementById('stock-list-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const searchQuery = (document.getElementById('stock-search-input')?.value || '').toLowerCase().trim();
+            const sortKey = document.getElementById('stock-sort-key')?.value || 'grade';
+
+            let filtered = inventory.filter(item => {
+                const matchesFilter = (currentFilter === 'ALL') || 
+                    (item.grade === currentFilter) || 
+                    (item.category === currentFilter);
+                const matchesSearch = !searchQuery || 
+                    (item.name || '').toLowerCase().includes(searchQuery) || 
+                    (item.jan || '').toLowerCase().includes(searchQuery) ||
+                    (item.date || '').toLowerCase().includes(searchQuery);
+                return matchesFilter && matchesSearch;
+            });
+
+            const rarityOrder = { 'UR': 4, 'SSR': 3, 'SR': 2, 'R': 1 };
+            const statusOrder = { 'unbuilt': 1, 'assembly': 2, 'finished': 3 };
+
+            filtered.sort((a, b) => {
+                let comparison = 0;
+
+                if (sortKey === 'grade') {
+                    comparison = (a.grade || '').localeCompare(b.grade || '');
+                } else if (sortKey === 'date') {
+                    comparison = (a.date || '').localeCompare(b.date || '');
+                } else if (sortKey === 'name') {
+                    comparison = (a.name || '').localeCompare(b.name || '', 'ja');
+                } else if (sortKey === 'rarity') {
+                    const rA = rarityOrder[a.rarity] || 0;
+                    const rB = rarityOrder[b.rarity] || 0;
+                    comparison = rA - rB;
+                } else if (sortKey === 'category') {
+                    comparison = (a.category || '').localeCompare(b.category || '');
+                } else if (sortKey === 'status') {
+                    const sA = statusOrder[a.status] || 0;
+                    const sB = statusOrder[b.status] || 0;
+                    comparison = sA - sB;
+                }
+
+                return sortAscending ? comparison : -comparison;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-slate-500">該当するガンプラが登録されていません</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const gradeInfo = GRADES[item.grade] || GRADES.OTHER;
+                const catInfo = CATEGORIES[item.category] || CATEGORIES.NORMAL;
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-900/50 transition";
 
-                let badgeClass = "bg-slate-800 text-slate-300";
-                if (b.genre === '漫画') badgeClass = "bg-indigo-950 text-indigo-300 border border-indigo-700/50";
-                if (b.genre === 'ラノベ') badgeClass = "bg-purple-950 text-purple-300 border border-purple-700/50";
-                if (b.genre === '小説') badgeClass = "bg-emerald-950 text-emerald-300 border border-emerald-700/50";
-
                 tr.innerHTML = `
-                    <td class="p-3 text-center">
-                        <button onclick="toggleFavorite('${b.id}')" class="text-base transition ${b.favorite ? 'text-amber-400' : 'text-slate-600 hover:text-slate-400'}">
-                            <i class="${b.favorite ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded font-bold text-xs ${gradeInfo.badgeClass} whitespace-nowrap">
+                            ${gradeInfo.name}
+                        </span>
+                    </td>
+                    <td class="p-3 font-bold text-white">${item.name}</td>
+                    <td class="p-3 text-xs text-cyan-300 font-orbitron whitespace-nowrap">${item.date || '-'}</td>
+                    <td class="p-3">
+                        <button onclick="toggleActive('${item.id}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${item.active ? 'bg-cyan-950 text-cyan-400 border border-cyan-700' : 'bg-slate-800 text-slate-500'}">
+                            ${item.active ? '<i class="fa-solid fa-check"></i> 今季有効' : '次季持ち越し'}
                         </button>
                     </td>
                     <td class="p-3">
-                        <span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${badgeClass}">
-                            ${b.genre || 'その他'}
+                        <select onchange="updateItemStatus('${item.id}', this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs font-bold text-white focus:outline-none focus:border-cyan-500">
+                            <option value="unbuilt" ${item.status === 'unbuilt' ? 'selected' : ''}>未組立</option>
+                            <option value="assembly" ${item.status === 'assembly' ? 'selected' : ''}>仮組</option>
+                            <option value="finished" ${item.status === 'finished' ? 'selected' : ''}>完成</option>
+                        </select>
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2.5 py-1 rounded font-bold text-xs ${catInfo.badgeClass} whitespace-nowrap">
+                            <i class="fa-solid ${catInfo.icon}"></i> ${catInfo.name}
                         </span>
                     </td>
-                    <td class="p-3 font-bold text-white text-xs sm:text-sm">${b.title}</td>
-                    <td class="p-3 text-xs text-slate-400">${b.publisher || '-'}</td>
-                    <td class="p-3 text-xs font-mono text-sky-400/80">${b.isbn || '-'}</td>
-                    <td class="p-3 text-right space-x-2">
-                        <button onclick="openEditModal('${b.id}')" class="text-slate-400 hover:text-sky-400 p-1 text-xs">
+                    <td class="p-3 font-orbitron font-bold text-xs text-slate-300">${item.rarity}</td>
+                    <td class="p-3 text-xs text-cyan-300 font-mono">${item.jan || '-'}</td>
+                    <td class="p-3 text-right space-x-2 whitespace-nowrap">
+                        <button onclick="openEditModal('${item.id}')" class="text-slate-400 hover:text-cyan-400 transition text-xs p-1">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button onclick="deleteBook('${b.id}')" class="text-slate-400 hover:text-rose-400 p-1 text-xs">
+                        <button onclick="deleteKit('${item.id}')" class="text-slate-400 hover:text-rose-400 transition text-xs p-1">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </td>
@@ -825,292 +1870,547 @@
             });
         }
 
-        function toggleFavorite(id) {
-            const b = books.find(x => x.id === id);
-            if (b) {
-                b.favorite = !b.favorite;
-                saveBooks();
+        // --- STREAMING_CHUNK:Rendering Paint Stock Table & Full Backup/Restore Logic for both Paints and Kits... ---
+        function renderPaintList() {
+            const tbody = document.getElementById('paint-list-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const searchQuery = (document.getElementById('paint-search-input')?.value || '').toLowerCase().trim();
+            const sortKey = document.getElementById('paint-sort-key')?.value || 'name';
+
+            // Stats update
+            const activeCount = paintInventory.filter(p => p.status !== 'Empty').length;
+            const fullCount = paintInventory.filter(p => p.status === 'Full').length;
+            const littleCount = paintInventory.filter(p => p.status === 'A little').length;
+            const emptyCount = paintInventory.filter(p => p.status === 'Empty').length;
+
+            if ($('paint-stat-active')) $('paint-stat-active').innerText = `${activeCount} 個`;
+            if ($('paint-stat-full')) $('paint-stat-full').innerText = `${fullCount} 個`;
+            if ($('paint-stat-little')) $('paint-stat-little').innerText = `${littleCount} 個`;
+            if ($('paint-stat-empty')) $('paint-stat-empty').innerText = `${emptyCount} 個`;
+
+            let filtered = paintInventory.filter(item => {
+                let matchesStatus = true;
+                if (currentPaintFilter === 'ACTIVE') matchesStatus = (item.status !== 'Empty');
+                else if (currentPaintFilter === 'EMPTY') matchesStatus = (item.status === 'Empty');
+
+                const matchesSearch = !searchQuery || 
+                    (item.name || '').toLowerCase().includes(searchQuery) || 
+                    (item.brand || '').toLowerCase().includes(searchQuery) ||
+                    (item.type || '').toLowerCase().includes(searchQuery) ||
+                    (item.jan || '').toLowerCase().includes(searchQuery);
+
+                return matchesStatus && matchesSearch;
+            });
+
+            filtered.sort((a, b) => {
+                if (sortKey === 'name') return (a.name || '').localeCompare(b.name || '', 'ja');
+                if (sortKey === 'brand') return (a.brand || '').localeCompare(b.brand || '', 'ja');
+                if (sortKey === 'type') return (a.type || '').localeCompare(b.type || '', 'ja');
+                if (sortKey === 'date') return (b.date || '').localeCompare(a.date || '');
+                if (sortKey === 'status') {
+                    const order = { 'Full': 1, 'A little': 2, 'Empty': 3 };
+                    return (order[a.status] || 9) - (order[b.status] || 9);
+                }
+                return 0;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-500">該当する塗料が登録されていません (${currentPaintFilter === 'ACTIVE' ? 'Empty塗料は除外中' : '条件に一致なし'})</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition";
+
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-amber-300 whitespace-nowrap text-xs">${item.brand || 'クレオス'}</td>
+                    <td class="p-3 font-bold text-white">${item.name}</td>
+                    <td class="p-3 text-xs text-slate-300 font-bold whitespace-nowrap">${item.type || 'ラッカー'}</td>
+                    <td class="p-3">
+                        <select onchange="updatePaintStatus('${item.id}', this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs font-bold text-white focus:outline-none focus:border-amber-500">
+                            <option value="Full" ${item.status === 'Full' ? 'selected' : ''}>🟢 Full (満量)</option>
+                            <option value="A little" ${item.status === 'A little' ? 'selected' : ''}>🟡 A little (僅か)</option>
+                            <option value="Empty" ${item.status === 'Empty' ? 'selected' : ''}>🔴 Empty (使い切り)</option>
+                        </select>
+                    </td>
+                    <td class="p-3 text-xs text-amber-300 font-orbitron whitespace-nowrap">${item.date || '-'}</td>
+                    <td class="p-3 text-xs text-slate-400 font-mono">${item.jan || '-'}</td>
+                    <td class="p-3 text-right space-x-2 whitespace-nowrap">
+                        <button onclick="openEditPaintModal('${item.id}')" class="text-slate-400 hover:text-amber-400 transition text-xs p-1">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deletePaint('${item.id}')" class="text-slate-400 hover:text-rose-400 transition text-xs p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterPaintStatus(filterKey) {
+            currentPaintFilter = filterKey;
+            document.querySelectorAll('.paint-filter-btn').forEach(btn => {
+                if (btn.dataset.pfilter === filterKey) {
+                    btn.className = "paint-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-600 text-white whitespace-nowrap";
+                } else {
+                    btn.className = "paint-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap";
+                }
+            });
+            renderPaintList();
+        }
+
+        function updatePaintStatus(id, newStatus) {
+            const item = paintInventory.find(p => p.id === id);
+            if (item) {
+                item.status = newStatus;
+                savePaintInventory();
             }
         }
 
-        function inferGenreFromBookData(title, publisher, cCode = '') {
-            const t = (title || '').toLowerCase();
-            const p = (publisher || '').toLowerCase();
-
-            const ranobeKeywords = [
-                '電撃文庫', 'スニーカー文庫', 'ファンタジア文庫', 'mf文庫j', 'ガガガ文庫', 
-                'オーバーラップ文庫', 'ファミ通文庫', 'hj文庫', 'コミックガルド', 'ダッシュエックス文庫',
-                'ヒーロー文庫', 'モンスター文庫', 'カドカワbooks', 'ライトノベル', 'ラノベ'
-            ];
-            if (ranobeKeywords.some(kw => t.includes(kw) || p.includes(kw))) return 'ラノベ';
-
-            const mangaKeywords = [
-                'コミック', 'コミックス', '漫画', 'kc', 'ジャンプ', 'サンデー', 'マガジン', 
-                'ガンガン', '花とゆめ', 'マーガレット', 'ヤング', 'まるとく', 'c9979'
-            ];
-            if (mangaKeywords.some(kw => t.includes(kw) || p.includes(kw)) || cCode.startsWith('C99')) return '漫画';
-
-            const novelKeywords = ['小説', '文庫', '新書', '単行本', '出版', '文藝春秋', '新潮', '集英社文庫', '角川文庫'];
-            if (novelKeywords.some(kw => t.includes(kw) || p.includes(kw))) return '小説';
-
-            return '漫画';
+        function deletePaint(id) {
+            if (confirm('この塗料を台帳データから削除しますか？')) {
+                paintInventory = paintInventory.filter(p => p.id !== id);
+                savePaintInventory();
+            }
         }
 
-        async function fetchBookInfoByIsbn(isbn) {
-            const cleanIsbn = isbn.replace(/-/g, '').trim();
-            try {
-                const res = await fetch(`https://api.openbd.jp/v1/get?isbn=${cleanIsbn}`);
-                const data = await res.json();
-                if (data && data[0] && data[0].summary) {
-                    const sum = data[0].summary;
-                    const cCode = data[0].onix?.DescriptiveDetail?.Subject?.[0]?.SubjectCode || '';
-                    const inferredGenre = inferGenreFromBookData(sum.title, sum.publisher, cCode);
+        function openAddPaintModal() {
+            document.getElementById('paint-modal-title').innerHTML = `<i class="fa-solid fa-fill-drip text-amber-400"></i> 塗料を登録`;
+            document.getElementById('paint-id').value = '';
+            document.getElementById('paint-jan').value = '';
+            document.getElementById('paint-name').value = '';
+            document.getElementById('paint-brand').value = 'クレオス';
+            document.getElementById('paint-type').value = 'ラッカー';
+            document.getElementById('paint-status').value = 'Full';
+            document.getElementById('paint-date').value = lastUsedDate || getTodayString();
 
-                    return {
-                        isbn: cleanIsbn,
-                        title: sum.title + (sum.volume ? ` ${sum.volume}` : ''),
-                        publisher: sum.publisher || '',
-                        genre: inferredGenre
-                    };
+            document.getElementById('add-paint-modal').classList.remove('hidden');
+        }
+
+        function openEditPaintModal(id) {
+            const item = paintInventory.find(p => p.id === id);
+            if (!item) return;
+
+            document.getElementById('paint-modal-title').innerHTML = `<i class="fa-solid fa-pen text-amber-400"></i> 塗料情報を編集`;
+            document.getElementById('paint-id').value = item.id;
+            document.getElementById('paint-jan').value = item.jan || '';
+            document.getElementById('paint-name').value = item.name || '';
+            document.getElementById('paint-brand').value = item.brand || 'クレオス';
+            document.getElementById('paint-type').value = item.type || 'ラッカー';
+            document.getElementById('paint-status').value = item.status || 'Full';
+            document.getElementById('paint-date').value = item.date || lastUsedDate || getTodayString();
+
+            document.getElementById('add-paint-modal').classList.remove('hidden');
+        }
+
+        function closeAddPaintModal() {
+            document.getElementById('add-paint-modal').classList.add('hidden');
+        }
+
+        function savePaint(e) {
+            e.preventDefault();
+            const id = document.getElementById('paint-id').value;
+            const jan = document.getElementById('paint-jan').value.trim();
+            const name = document.getElementById('paint-name').value.trim();
+            const brand = document.getElementById('paint-brand').value;
+            const type = document.getElementById('paint-type').value;
+            const status = document.getElementById('paint-status').value;
+            const date = document.getElementById('paint-date').value || getTodayString();
+
+            if (!name) return;
+            lastUsedDate = date;
+
+            if (id) {
+                const item = paintInventory.find(p => p.id === id);
+                if (item) {
+                    item.jan = jan;
+                    item.name = name;
+                    item.brand = brand;
+                    item.type = type;
+                    item.status = status;
+                    item.date = date;
                 }
-            } catch (e) {}
-            return { isbn: cleanIsbn, title: '', publisher: '', genre: '漫画' };
+            } else {
+                paintInventory.unshift({
+                    id: Date.now().toString(),
+                    jan,
+                    name,
+                    brand,
+                    type,
+                    status,
+                    date
+                });
+            }
+
+            savePaintInventory();
+            closeAddPaintModal();
+            playSound('win');
         }
 
-        function openAddModal(initialData = {}) {
-            $('modal-title').innerText = initialData.id ? '本を編集' : '本を追加';
-            $('book-id').value = initialData.id || '';
-            $('book-isbn').value = initialData.isbn || '';
-            $('book-title').value = initialData.title || '';
-            $('book-genre').value = initialData.genre || '漫画';
-            $('book-publisher').value = initialData.publisher || '';
-            $('book-favorite').checked = !!initialData.favorite;
+        function filterStock(categoryKey) {
+            currentFilter = categoryKey;
+            document.querySelectorAll('.stock-filter-btn').forEach(btn => {
+                if (btn.dataset.filter === categoryKey) {
+                    btn.className = "stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-600 text-white whitespace-nowrap";
+                } else {
+                    btn.className = "stock-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 hover:bg-slate-700 whitespace-nowrap";
+                }
+            });
+            renderStock();
+        }
 
-            $('add-modal').classList.remove('hidden');
+        function toggleActive(id) {
+            const item = inventory.find(i => i.id === id);
+            if (item) {
+                item.active = !item.active;
+                saveInventory();
+            }
+        }
+
+        function updateItemStatus(id, newStatus) {
+            const item = inventory.find(i => i.id === id);
+            if (item) {
+                item.status = newStatus;
+                saveInventory();
+            }
+        }
+
+        function deleteKit(id) {
+            if (confirm('このキットを削除しますか？')) {
+                inventory = inventory.filter(i => i.id !== id);
+                saveInventory();
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').innerText = 'ガンプラを追加';
+            document.getElementById('kit-id').value = '';
+            document.getElementById('kit-jan').value = '';
+            document.getElementById('kit-name').value = '';
+            document.getElementById('kit-grade').value = 'HG';
+            document.getElementById('kit-active-status').value = 'false'; // DEFAULT: 次季持ち越し
+            document.getElementById('kit-status-type').value = 'unbuilt'; // DEFAULT: 未組立
+            document.getElementById('kit-category').value = 'NORMAL';
+            document.getElementById('kit-rarity').value = 'R';
+
+            // Auto inherit last used date
+            document.getElementById('kit-date').value = lastUsedDate || getTodayString();
+
+            const banner = document.getElementById('autofill-banner');
+            if (banner) banner.classList.add('hidden');
+
+            document.getElementById('add-modal').classList.remove('hidden');
         }
 
         function openEditModal(id) {
-            const b = books.find(x => x.id === id);
-            if (b) openAddModal(b);
+            const item = inventory.find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-title').innerText = 'ガンプラを編集';
+            document.getElementById('kit-id').value = item.id;
+            document.getElementById('kit-jan').value = item.jan || '';
+            document.getElementById('kit-name').value = item.name || '';
+            document.getElementById('kit-grade').value = item.grade || 'OTHER';
+            document.getElementById('kit-active-status').value = item.active ? 'true' : 'false';
+            document.getElementById('kit-status-type').value = item.status || 'unbuilt';
+            document.getElementById('kit-category').value = item.category || 'NORMAL';
+            document.getElementById('kit-rarity').value = item.rarity || 'R';
+            document.getElementById('kit-date').value = item.date || lastUsedDate || getTodayString();
+
+            const banner = document.getElementById('autofill-banner');
+            if (banner) banner.classList.add('hidden');
+
+            document.getElementById('add-modal').classList.remove('hidden');
         }
 
-        function closeAddModal() {
-            $('add-modal').classList.add('hidden');
+        function closeAddModal(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('add-modal').classList.add('hidden');
         }
 
-        function saveBook(e) {
+        function saveKit(e) {
             e.preventDefault();
-            const id = $('book-id').value;
-            const isbn = $('book-isbn').value.trim();
-            const title = $('book-title').value.trim();
-            const genre = $('book-genre').value;
-            const publisher = $('book-publisher').value.trim();
-            const favorite = $('book-favorite').checked;
+            const id = document.getElementById('kit-id').value;
+            const jan = document.getElementById('kit-jan').value.trim();
+            const name = document.getElementById('kit-name').value.trim();
+            const grade = document.getElementById('kit-grade').value;
+            const active = document.getElementById('kit-active-status').value === 'true';
+            const status = document.getElementById('kit-status-type').value;
+            const category = document.getElementById('kit-category').value;
+            const rarity = document.getElementById('kit-rarity').value;
+            const date = document.getElementById('kit-date').value || getTodayString();
 
-            if (!title) return;
+            if (!name) return;
+
+            // Remember last used date for next entry
+            lastUsedDate = date;
 
             if (id) {
-                const b = books.find(x => x.id === id);
-                if (b) {
-                    b.isbn = isbn;
-                    b.title = title;
-                    b.genre = genre;
-                    b.publisher = publisher;
-                    b.favorite = favorite;
+                const item = inventory.find(i => i.id === id);
+                if (item) {
+                    item.jan = jan;
+                    item.name = name;
+                    item.grade = grade;
+                    item.active = active;
+                    item.status = status;
+                    item.category = category;
+                    item.rarity = rarity;
+                    item.date = date;
                 }
             } else {
-                books.unshift({
+                inventory.unshift({
                     id: Date.now().toString(),
-                    isbn,
-                    title,
-                    genre,
-                    publisher,
-                    favorite
+                    jan,
+                    name,
+                    grade,
+                    status,
+                    category,
+                    rarity,
+                    date,
+                    active: active // Selected active state (default false)
                 });
             }
 
-            saveBooks();
+            saveInventory();
             closeAddModal();
         }
 
-        function deleteBook(id) {
-            if (confirm('この本を削除しますか？')) {
-                books = books.filter(x => x.id !== id);
-                saveBooks();
+        function openConfigModal() {
+            const targetEl = document.getElementById('cfg-target-total');
+            if (targetEl) targetEl.value = appConfig.targetTotal || 5;
+            document.getElementById('config-modal').classList.remove('hidden');
+        }
+
+        function closeConfigModal() {
+            document.getElementById('config-modal').classList.add('hidden');
+        }
+
+        function saveConfig() {
+            const targetVal = parseInt(document.getElementById('cfg-target-total').value, 10);
+            if (isNaN(targetVal) || targetVal < 1) {
+                alert('1以上の数値を入力してください。');
+                return;
             }
-        }
-
-        async function handleScannedIsbn(isbn) {
-            if (scanTargetMode === 'home') {
-                const info = await fetchBookInfoByIsbn(isbn);
-                openAddModal({
-                    isbn: info.isbn,
-                    title: info.title,
-                    publisher: info.publisher,
-                    genre: info.genre
-                });
-            } else {
-                await processShopCheck(isbn);
-            }
-        }
-
-        async function processShopCheck(isbn) {
-            const resContainer = $('shop-result-container');
-            resContainer.classList.remove('hidden');
-
-            const info = await fetchBookInfoByIsbn(isbn);
-            const scannedTitle = info.title || '（タイトル不明）';
-
-            const exactMatch = books.find(b => b.isbn === isbn);
-
-            const baseTitle = extractBaseTitle(scannedTitle);
-            const seriesBooks = books.filter(b => extractBaseTitle(b.title) === baseTitle);
-
-            const ownedVolumes = seriesBooks
-                .map(b => extractVolumeNumber(b.title))
-                .filter(v => v !== null)
-                .sort((a, b) => a - b);
-
-            const scannedVolume = extractVolumeNumber(scannedTitle);
-
-            let html = '';
-
-            if (exactMatch) {
-                html = `
-                    <div class="scifi-panel p-6 rounded-2xl border-2 border-rose-500/80 bg-rose-950/30 text-center space-y-3">
-                        <div class="inline-block px-3 py-1 rounded-full bg-rose-600 text-white font-black text-xs">
-                            ⚠️ すでに持っています！
-                        </div>
-                        <h3 class="text-xl font-black text-white">${exactMatch.title}</h3>
-                        <p class="text-xs text-rose-300">ジャンル: ${exactMatch.genre} / 出版社: ${exactMatch.publisher || '-'}</p>
-                    </div>
-                `;
-            } else {
-                let missingMsg = '';
-                if (ownedVolumes.length > 0) {
-                    const maxVol = Math.max(...ownedVolumes);
-                    const missingInBetween = [];
-                    for (let i = 1; i < maxVol; i++) {
-                        if (!ownedVolumes.includes(i)) missingInBetween.push(i);
-                    }
-
-                    missingMsg = `
-                        <div class="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 text-left text-xs space-y-2">
-                            <div class="font-bold text-sky-400">📚 このシリーズの所持状況:</div>
-                            <div class="text-slate-300">所持中の巻: <span class="font-bold text-white">${ownedVolumes.join(', ')} 巻</span></div>
-                            ${missingInBetween.length > 0 ? `<div class="text-amber-400 font-bold">⚠️ 抜けている巻（未所持）: ${missingInBetween.join(', ')} 巻</div>` : ''}
-                            ${scannedVolume && scannedVolume > maxVol ? `<div class="text-emerald-400 font-bold">✨ 最新巻の購入候補です！（現在の最大所持: ${maxVol}巻）</div>` : ''}
-                        </div>
-                    `;
-                }
-
-                html = `
-                    <div class="scifi-panel p-6 rounded-2xl border-2 border-emerald-500/80 bg-emerald-950/20 text-center space-y-3">
-                        <div class="inline-block px-3 py-1 rounded-full bg-emerald-600 text-white font-black text-xs">
-                            ✓ 持っていません（購入可能）
-                        </div>
-                        <h3 class="text-xl font-black text-white">${scannedTitle}</h3>
-                        <p class="text-xs text-emerald-300">自動判定ジャンル: ${info.genre} / 出版社: ${info.publisher || '-'}</p>
-                        
-                        ${missingMsg}
-
-                        <div class="pt-3">
-                            <button onclick="registerFromShop('${info.isbn}', '${scannedTitle}', '${info.genre}', '${info.publisher}')" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-lg">
-                                <i class="fa-solid fa-plus"></i> そのまま書庫に登録する
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            resContainer.innerHTML = html;
-        }
-
-        function extractBaseTitle(fullTitle) {
-            return fullTitle.replace(/[\(（【\[].*?[\)）】\]]/g, '').replace(/[0-9０-９]+巻?$/, '').trim();
-        }
-
-        function extractVolumeNumber(title) {
-            const match = title.match(/([0-9０-９]+)\s*巻?/);
-            if (match) {
-                return parseInt(match[1].replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xfee0)), 10);
-            }
-            return null;
-        }
-
-        function registerFromShop(isbn, title, genre, publisher) {
-            books.unshift({
-                id: Date.now().toString(),
-                isbn,
-                title,
-                genre,
-                publisher,
-                favorite: false
-            });
-            saveBooks();
-            alert('書庫に登録しました！');
-            $('shop-result-container').classList.add('hidden');
+            appConfig.targetTotal = targetVal;
+            localStorage.setItem('gunpla_app_config_v3.9.5', JSON.stringify(appConfig));
+            closeConfigModal();
+            updateStats();
+            playSound('win');
         }
 
         function openBackupModal(mode) {
-            const modal = $('backup-modal');
-            const textarea = $('backup-textarea');
-            const btn = $('backup-action-btn');
-            const msg = $('backup-msg');
+            const modal = document.getElementById('backup-modal');
+            const title = document.getElementById('backup-modal-title');
+            const desc = document.getElementById('backup-modal-desc');
+            const textarea = document.getElementById('backup-textarea');
+            const btn = document.getElementById('backup-action-btn');
+            const shareBtn = document.getElementById('backup-share-btn');
+            const status = document.getElementById('backup-status-msg');
 
-            msg.innerText = '';
+            if (!modal) return;
+            status.innerText = '';
             modal.classList.remove('hidden');
 
+            const nowStr = new Date().toLocaleString('ja-JP');
+
             if (mode === 'export') {
-                textarea.value = JSON.stringify(books, null, 2);
-                btn.innerText = 'クリップボードにコピー';
+                title.innerHTML = `<i class="fa-solid fa-share-nodes text-indigo-400"></i> バックアップ＆共有`;
+                desc.innerText = `積みプラおよび塗料在庫を含む全データをテキスト形式で保存・複製します。`;
+
+                const payload = {
+                    exportDate: nowStr,
+                    appConfig: appConfig,
+                    inventory: inventory,
+                    paintInventory: paintInventory,
+                    seasonDrawnCount: seasonDrawnCount,
+                    totalPulls: totalPulls,
+                    pullHistory: pullHistory,
+                    lastUsedDate: lastUsedDate
+                };
+
+                textarea.value = JSON.stringify(payload, null, 2);
+                shareBtn.classList.remove('hidden');
+                btn.innerText = 'コピーする';
                 btn.onclick = () => {
                     textarea.select();
                     document.execCommand('copy');
-                    msg.innerText = 'コピーしました！';
+                    status.innerText = 'クリップボードにコピーしました！';
+                    playSound('win');
                 };
             } else {
+                title.innerHTML = `<i class="fa-solid fa-file-import text-violet-400"></i> データ復元・一括読込`;
+                desc.innerText = `バックアップテキストを貼り付けて復元ボタンを押してください。積みプラ・塗料が一括で復元されます。`;
                 textarea.value = '';
+                shareBtn.classList.add('hidden');
                 btn.innerText = '復元を実行';
                 btn.onclick = () => {
-                    const rawText = textarea.value.trim();
-                    if (!rawText) return;
-
+                    const raw = textarea.value.trim();
+                    if (!raw) return;
                     try {
-                        const parsed = JSON.parse(rawText);
-                        let importedList = [];
+                        const parsed = JSON.parse(raw);
+                        if (parsed.inventory && Array.isArray(parsed.inventory)) {
+                            inventory = parsed.inventory;
+                            if (parsed.paintInventory && Array.isArray(parsed.paintInventory)) paintInventory = parsed.paintInventory;
+                            if (parsed.appConfig) appConfig = parsed.appConfig;
+                            if (typeof parsed.seasonDrawnCount === 'number') seasonDrawnCount = parsed.seasonDrawnCount;
+                            if (typeof parsed.totalPulls === 'number') totalPulls = parsed.totalPulls;
+                            if (Array.isArray(parsed.pullHistory)) pullHistory = parsed.pullHistory;
+                            if (parsed.lastUsedDate) lastUsedDate = parsed.lastUsedDate;
 
-                        if (Array.isArray(parsed)) {
-                            importedList = parsed;
-                        } else if (parsed && Array.isArray(parsed.bookInventory)) {
-                            importedList = parsed.bookInventory;
-                        }
-
-                        if (importedList.length > 0) {
-                            books = importedList.map(item => ({
-                                id: item.id || Date.now().toString() + Math.random(),
-                                isbn: item.isbn || item.jan || '',
-                                title: item.title || '（タイトルなし）',
-                                genre: item.genre || '漫画',
-                                publisher: item.publisher || '',
-                                favorite: !!item.favorite
-                            }));
-
-                            saveBooks();
+                            localStorage.setItem('gunpla_app_config_v3.9.5', JSON.stringify(appConfig));
+                            localStorage.setItem('gunpla_history_v3.9.5', JSON.stringify(pullHistory));
+                            saveInventory();
+                            savePaintInventory();
                             closeBackupModal();
-                            alert(`${books.length}件のデータを正常に復元・読み込みました！`);
+                            playSound('win');
                         } else {
-                            alert('有効な本データが見つかりませんでした。');
+                            alert('データ形式が正しくありません。');
                         }
-                    } catch (e) {
-                        alert('JSONテキストの解析に失敗しました。正しいバックアップテキストを貼り付けてください。');
+                    } catch (err) {
+                        alert('JSON形式のテキストではありません。');
                     }
                 };
             }
         }
 
         function closeBackupModal() {
-            $('backup-modal').classList.add('hidden');
+            document.getElementById('backup-modal').classList.add('hidden');
+        }
+
+        function shareToIosNotes() {
+            const textarea = document.getElementById('backup-textarea');
+            if (textarea) {
+                textarea.select();
+                document.execCommand('copy');
+                alert('テキストをコピーしました！メモ帳アプリ等に貼り付けて保存してください。');
+            }
+        }
+
+        function showResultsModal(results, isLastOne = false) {
+            const container = document.getElementById('result-card-container');
+            if (!container) return;
+
+            playSound('win');
+            confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
+
+            let html = `
+                <div class="mb-6">
+                    <span class="text-xs font-orbitron text-amber-400 tracking-widest uppercase">
+                        ${isLastOne ? '🔥 LAST ONE PRIZE UNLOCKED 🔥' : '🎯 EXTRACTION SUCCESS 🎯'}
+                    </span>
+                    <h2 class="text-3xl font-black text-white mt-1">
+                        ${isLastOne ? 'シーズン達成＆ラストワン獲得！' : '抽出成功！獲得ガンプラ'}
+                    </h2>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+            `;
+
+            results.forEach(kit => {
+                const gradeInfo = GRADES[kit.grade] || GRADES.OTHER;
+                const catInfo = CATEGORIES[kit.category] || CATEGORIES.NORMAL;
+
+                html += `
+                    <div class="scifi-panel p-6 rounded-xl relative flex flex-col justify-between items-center text-center max-w-sm w-full border-2 border-cyan-400 shadow-[0_0_30px_rgba(56,189,248,0.3)]">
+                        <div class="w-full flex justify-between items-center mb-2 gap-1 flex-wrap">
+                            <span class="px-2 py-0.5 rounded font-bold text-[10px] ${gradeInfo.badgeClass}">${gradeInfo.name}</span>
+                            <span class="px-2 py-0.5 rounded font-bold text-[10px] ${catInfo.badgeClass}">
+                                <i class="fa-solid ${catInfo.icon}"></i> ${catInfo.name}
+                            </span>
+                            <span class="px-2 py-0.5 bg-slate-800 text-slate-300 rounded font-orbitron font-bold text-[10px]">
+                                ${kit.rarity}
+                            </span>
+                        </div>
+                        
+                        <div class="my-4">
+                            <i class="fa-solid fa-cube text-4xl mb-3 text-cyan-400 animate-bounce"></i>
+                            <h3 class="font-black text-white text-lg">${kit.name}</h3>
+                        </div>
+
+                        <div class="text-[10px] text-slate-400 font-orbitron">
+                            ${kit.category === 'LASTONE' ? '★ラストワン特賞枠' : 'SEASON DROP'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="mt-8 flex justify-center">
+                    <button type="button" onclick="closeResultModal(event)" class="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold rounded-xl shadow-lg transition">
+                        確認して閉じる
+                    </button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        function closeResultModal(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('result-modal').classList.add('hidden');
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (pullHistory.length === 0) {
+                container.innerHTML = `<p class="text-center py-8 text-slate-500">ガチャ履歴がありません。</p>`;
+                return;
+            }
+
+            pullHistory.forEach(log => {
+                const catInfo = CATEGORIES[log.category] || CATEGORIES.NORMAL;
+
+                const div = document.createElement('div');
+                div.className = "scifi-panel p-3 rounded-xl flex justify-between items-center border-l-4";
+                div.style.borderLeftColor = catInfo.color;
+
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="px-2 py-0.5 rounded font-bold text-xs ${catInfo.badgeClass} whitespace-nowrap">${catInfo.name}</span>
+                        <div>
+                            <div class="text-sm font-bold text-white">${log.name}</div>
+                            <div class="text-[10px] text-slate-500">${log.timestamp}</div>
+                        </div>
+                    </div>
+                    <span class="text-xs text-slate-400 font-orbitron">${log.rarity}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function clearHistory() {
+            if (confirm('ガチャ履歴をクリアしますか？')) {
+                pullHistory = [];
+                totalPulls = 0;
+                localStorage.removeItem('gunpla_history_v3.9.5');
+                localStorage.setItem('gunpla_total_pulls_v3.9.5', JSON.stringify(totalPulls));
+                renderHistory();
+                updateStats();
+            }
+        }
+
+        function searchBandaiHobby() {
+            const jan = document.getElementById('kit-jan')?.value.trim();
+            const name = document.getElementById('kit-name')?.value.trim();
+            const q = jan || name;
+            if (q) {
+                window.open(`https://www.google.com/search?q=バンダイ+ガンプラ+${encodeURIComponent(q)}`, '_blank');
+            } else {
+                alert('検索ワードまたはJANコードを入力してください。');
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     </script>
 </body>
