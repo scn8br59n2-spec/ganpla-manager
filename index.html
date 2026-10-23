@@ -776,7 +776,12 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-400 mb-1">JANコード</label>
-                    <input type="text" id="paint-jan" placeholder="4973028......" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-amber-300 font-mono focus:outline-none focus:border-amber-500">
+                    <div class="flex gap-2">
+                        <input type="text" id="paint-jan" placeholder="4973028......" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-amber-300 font-mono focus:outline-none focus:border-amber-500">
+                        <button type="button" onclick="searchPaintWeb()" class="px-3 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold rounded-lg shrink-0 flex items-center gap-1 font-orbitron">
+                            <i class="fa-solid fa-globe"></i> Web検索
+                        </button>
+                    </div>
                 </div>
 
                 <div>
@@ -1306,7 +1311,6 @@
             openScannerModal('store_check');
         }
 
-        // --- STREAMING_CHUNK:Implementing Kit Scanning & Registration Logic with new defaults (Active: false, Status: unbuilt)... ---
         function handleScannedJanCode(janCode) {
             const matchedKit = inventory.find(item => item.jan === janCode);
 
@@ -1870,7 +1874,6 @@
             });
         }
 
-        // --- STREAMING_CHUNK:Rendering Paint Stock Table & Full Backup/Restore Logic for both Paints and Kits... ---
         function renderPaintList() {
             const tbody = document.getElementById('paint-list-body');
             if (!tbody) return;
@@ -1879,7 +1882,6 @@
             const searchQuery = (document.getElementById('paint-search-input')?.value || '').toLowerCase().trim();
             const sortKey = document.getElementById('paint-sort-key')?.value || 'name';
 
-            // Stats update
             const activeCount = paintInventory.filter(p => p.status !== 'Empty').length;
             const fullCount = paintInventory.filter(p => p.status === 'Full').length;
             const littleCount = paintInventory.filter(p => p.status === 'A little').length;
@@ -2097,7 +2099,6 @@
             document.getElementById('kit-category').value = 'NORMAL';
             document.getElementById('kit-rarity').value = 'R';
 
-            // Auto inherit last used date
             document.getElementById('kit-date').value = lastUsedDate || getTodayString();
 
             const banner = document.getElementById('autofill-banner');
@@ -2146,7 +2147,6 @@
 
             if (!name) return;
 
-            // Remember last used date for next entry
             lastUsedDate = date;
 
             if (id) {
@@ -2171,7 +2171,7 @@
                     category,
                     rarity,
                     date,
-                    active: active // Selected active state (default false)
+                    active: active
                 });
             }
 
@@ -2406,6 +2406,18 @@
                 window.open(`https://www.google.com/search?q=バンダイ+ガンプラ+${encodeURIComponent(q)}`, '_blank');
             } else {
                 alert('検索ワードまたはJANコードを入力してください。');
+            }
+        }
+
+        function searchPaintWeb() {
+            const jan = document.getElementById('paint-jan')?.value.trim();
+            const name = document.getElementById('paint-name')?.value.trim();
+            const brand = document.getElementById('paint-brand')?.value || '';
+            const q = jan ? `${brand} 塗料 ${jan}` : `${brand} 塗料 ${name}`;
+            if (jan || name) {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, '_blank');
+            } else {
+                alert('塗料名またはJANコードを入力してください。');
             }
         }
 
